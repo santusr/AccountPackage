@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SUBSalesItem" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="3335aaed-7d1f-4059-873d-4e139fbb447d">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT invoicehistory.ItemCode,invoicehistory.ItemDescription, SUM(invoicehistory.qty) AS t_qty, SUM(invoicehistory.Amount) AS t_Amount FROM invoicehistory, InvoiceHeader WHERE invoicehistory.InvoNo = InvoiceHeader.InvoNo AND InvoiceHeader.InvoDate = $P{fdate} GROUP BY invoicehistory.ItemCode ORDER BY t_Amount DESC]]>
+	</queryString>
+	<field name="ItemCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ItemDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="t_qty" class="java.math.BigDecimal"/>
+	<field name="t_Amount" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<rectangle>
+				<reportElement uuid="bd25852e-0b16-4634-9454-df3bd0a5728c" mode="Opaque" x="0" y="0" width="555" height="16" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement uuid="65229f5d-b848-43b2-8288-a8d9cfeb8ac1" x="7" y="0" width="131" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Item Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="a6c729c3-8a90-47d2-a791-7b6075770c62" x="138" y="0" width="248" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="953daddd-81f7-49af-b499-9d690fd48377" x="386" y="0" width="60" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f4b80f6c-3e17-4623-bd16-4ddc4f382e71" x="446" y="0" width="106" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement uuid="195ec16b-7201-4604-aa01-5f2324a12468" x="7" y="0" width="131" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3e4afc2c-5b80-4c41-a01b-892069398b9c" x="138" y="0" width="248" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ItemDescription}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="00104124-592a-4e2f-a6e2-a3e25a803823" x="386" y="0" width="60" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="53c4b161-8993-4d29-addd-c4e0b67982b1" x="446" y="0" width="106" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+					<paragraph rightIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_Amount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="86611c82-96fd-41a4-b334-f9d9e879de22" x="1" y="12" width="554" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+</jasperReport>

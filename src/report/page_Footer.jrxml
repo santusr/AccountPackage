@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Futter" pageWidth="534" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="494" leftMargin="20" rightMargin="20" topMargin="0" bottomMargin="0" uuid="8c83c808-80d3-426a-834e-c09886afde8e">
+	<property name="ireport.zoom" value="4.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<line>
+				<reportElement uuid="4a129e61-37a7-419c-ac69-cd87358ecfdc" x="-20" y="12" width="534" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="b338edbd-1625-49b1-a6c1-81178c25df6f" x="-19" y="14" width="513" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="7"/>
+				</textElement>
+				<text><![CDATA[Software by Sasiri CS / Tel. No : (+94) 77 5 749 849, (+94) 71 957 0 985 - (RAP)]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

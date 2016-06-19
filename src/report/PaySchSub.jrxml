@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InvoSub" pageWidth="550" pageHeight="50" columnWidth="550" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="ddae5632-bbbb-4ec3-be4a-8ad4df9459c7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CreditId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT Amount,DueDate FROM payschedule WHERE CreditId = $P{CreditId} AND status = '0']]>
+	</queryString>
+	<field name="Amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DueDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<columnHeader>
+		<band height="25">
+			<line>
+				<reportElement uuid="ec4a6ac2-ddf3-4fbd-b3c7-b0c3303b309f" x="1" y="4" width="1" height="20"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="0d70faa1-3583-4175-9bc3-160a5c7d489e" x="52" y="5" width="106" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Due Date]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="f149d1da-8f89-45b7-a919-8534a9f72a6d" x="1" y="4" width="548" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b4aea026-b35f-4564-aecb-d732eb20fe66" x="548" y="5" width="1" height="20"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="a3af7367-759b-436c-b326-2aece7d91d62" x="1" y="24" width="548" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="fc48a3b1-6fb7-4d5d-9066-20ebee883550" x="221" y="4" width="1" height="20"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="064402c4-06d5-4793-af08-a16189e1d6da" x="297" y="5" width="124" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<line>
+				<reportElement uuid="752b4064-c231-4554-a1c7-bfecb1d3f885" x="221" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="2c0e959d-ea35-4b03-903d-22e4e776be28" x="548" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="849bba80-817f-4354-a04f-404c8697714f" x="1" y="0" width="1" height="25"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="ca438a35-7b92-4fa3-a6a6-f7e1bbe8a724" x="297" y="5" width="124" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement uuid="8f89e191-04b5-4049-8b2c-2943f329156f" x="52" y="0" width="106" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DueDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

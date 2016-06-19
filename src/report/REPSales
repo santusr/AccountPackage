@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPCreditors" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c164427-adf3-4df8-9969-6f55683fd426">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT customer.AccCode, customer.CustName, SUM(Credit.TotPayble) AS TotPayble, credit.PDate FROM credit,customer WHERE credit.STATUS = '0' AND credit.totpayble > '0.00' AND credit.CustCode = customer.AccCode AND Customer.Type = 'C' GROUP BY credit.CustCode]]>
+	</queryString>
+	<field name="AccCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CustName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TotPayble" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c6be8c84-7461-46ae-899e-c9ce93b4f85a" x="0" y="0" width="555" height="79"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="5d9ec34d-3cbf-4627-b81d-1feeb8329d12" x="0" y="0" width="555" height="35"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tread Crediters]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="24" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="3515381f-a432-40bf-a4c9-19340e4cff3a" x="4" y="2" width="76" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Acc Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6fe6fed7-7aa9-423d-94f4-8340532ba864" x="97" y="2" width="265" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Crediters Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5969d801-44fb-4df7-be4a-efa697d2a271" x="364" y="2" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Cr.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ad62534e-eb9c-4d4b-b0f5-714f094060b1" x="471" y="2" width="80" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PDate]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="d0646710-8451-40fd-9ae6-0d9f7568e719" x="2" y="1" width="553" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="2bdf7641-3f19-4478-a5cb-403aa07676f2" x="2" y="23" width="553" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="8ae340c3-8fec-4557-8851-7d6409c83daf" x="2" y="1" width="1" height="23"/>
+			</line>
+			<line>
+				<reportElement uuid="019989e0-ea8b-434a-829c-ee2d0c5c07ef" x="555" y="1" width="1" height="23"/>
+			</line>
+			<line>
+				<reportElement uuid="f1ac7013-33d2-400a-a04d-30949a256e0a" x="93" y="1" width="1" height="23"/>
+			</line>
+			<line>
+				<reportElement uuid="901b89ce-c4a2-4803-b509-8f7616f7a955" x="362" y="1" width="1" height="23"/>
+			</line>
+			<line>
+				<reportElement uuid="f47374fd-03da-42e2-a345-a0aa3ba4f2a6" x="466" y="1" width="1" height="23"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement uuid="0bb5e5ab-4a1f-418f-bfdc-6a1f29d67844" x="4" y="1" width="76" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AccCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="29e35312-cc03-4af8-8912-ab9e51ac6a21" x="97" y="1" width="265" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CustName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fae1d0c9-d1d3-4bf8-a691-26810b8095fc" x="368" y="1" width="90" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TotPayble}]]></textFieldExpression>
+			</textField>
+			<textField pattern="YYYY-mm-DD">
+				<reportElement uuid="42440aa3-bf12-46c9-80c3-2677d9ef638e" x="471" y="1" width="80" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{PDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="ab48ac39-dbcf-4442-9764-bf6bc7d9b07d" x="93" y="0" width="1" height="23"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="3e9da119-54b2-46e0-b355-882f0b7d8ef4" x="2" y="-1" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement uuid="7a32c647-733c-40db-a5c3-54df66412c8c" x="466" y="0" width="1" height="23"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="624b129d-9f14-4f16-ab0f-1d7f10a1ce3a" x="555" y="-1" width="1" height="24"/>
+			</line>
+			<line>
+				<reportElement uuid="79988d62-264a-4845-9aa2-29b047182c3d" x="362" y="0" width="1" height="23"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="21" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="24" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement uuid="963dd272-0a98-45e0-88ef-9e5d2be54e63" x="3" y="1" width="553" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPCustomerHistory" pageWidth="595" pageHeight="842" columnWidth="539" leftMargin="36" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c164427-adf3-4df8-9969-6f55683fd426">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Customer" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+				customer.PrintName,
+				customer.Title,
+				credit.custCode,
+				credit.InvoNo,
+				invoiceheader.InvoDate,
+				credit.CreditId,
+				credit.AGDate,
+				(credit.NoInstal * credit.InstalValue) AS tot,
+				credit.LateCharge AS panalty,
+				credit.SPDisc AS rebit,
+				credit.TotPay,
+				(invoiceheader.NetAmount + credit.TotInterest + credit.LateCharge - credit.SPDisc - credit.TotPay) as TotPayble,
+				payschedule.installNo,
+				payschedule.DueDate,
+				payschedule.ClearDate,
+				payschedule.TotInstallVal,
+				payschedule.PayAmount,
+				payschedule.Balance,
+				if(credit.status = '1', 'PAID', if(credit.status = '0', 'UNPAID', 'CANCELED')) AS status
+FROM
+				Credit
+				LEFT JOIN payschedule ON payschedule.CreditId = credit.CreditId
+				LEFT JOIN customer ON customer.AccCode = credit.custCode
+				LEFT JOIN invoiceheader ON invoiceheader.InvoNo = credit.InvoNo
+
+WHERE
+				Credit.custCode = $P{Customer} AND
+				payschedule.`type` = 'INSTALMENT'
+ORDER BY
+				Credit.CreditID DESC, paySchedule.installNo ASC]]>
+	</queryString>
+	<field name="PrintName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Title" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="custCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="InvoNo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="InvoDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CreditId" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AGDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tot" class="java.math.BigDecimal"/>
+	<field name="panalty" class="java.math.BigDecimal"/>
+	<field name="rebit" class="java.math.BigDecimal"/>
+	<field name="TotPay" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TotPayble" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="installNo" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DueDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ClearDate" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="TotInstallVal" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PayAmount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Balance" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totAmount" class="java.math.BigDecimal" resetType="Group" resetGroup="g1" calculation="Sum">
+		<variableExpression><![CDATA[$F{PayAmount}]]></variableExpression>
+	</variable>
+	<variable name="TotSrep" class="java.math.BigDecimal" resetType="Group" resetGroup="Srep" incrementType="Group" incrementGroup="g1" calculation="Sum">
+		<variableExpression><![CDATA[$V{totAmount}]]></variableExpression>
+	</variable>
+	<variable name="TotCollection" class="java.math.BigDecimal" incrementType="Group" incrementGroup="Srep" calculation="Sum">
+		<variableExpression><![CDATA[$V{TotSrep}]]></variableExpression>
+	</variable>
+	<variable name="totBalance" class="java.math.BigDecimal" resetType="Group" resetGroup="Srep" calculation="Sum">
+		<variableExpression><![CDATA[$F{Balance}]]></variableExpression>
+	</variable>
+	<group name="Srep">
+		<groupExpression><![CDATA[$F{InvoNo}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField>
+					<reportElement uuid="96950914-80bf-4c1e-ae63-2810decabd9d" mode="Opaque" x="5" y="5" width="170" height="15" forecolor="#FFFFFF" backcolor="#666666"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+						<paragraph leftIndent="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Invoice No. : "+$F{InvoNo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="a31249b8-bbba-4631-be45-81c5ba870f7c" mode="Opaque" x="175" y="5" width="170" height="15" forecolor="#FFFFFF" backcolor="#666666"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+						<paragraph leftIndent="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Invoice Date : "+$F{InvoDate}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="c07305f1-58cd-44c0-9e5b-2f66f85bc23e" x="345" y="0" width="133" height="20" forecolor="#FF0000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Bodoni MT Black" size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band/>
+		</groupFooter>
+	</group>
+	<group name="g1">
+		<groupExpression><![CDATA[$F{CreditId}]]></groupExpression>
+		<groupHeader>
+			<band height="41" splitType="Stretch">
+				<rectangle>
+					<reportElement uuid="aef0d155-0f06-44bf-88df-f38c5f9ea780" x="4" y="24" width="535" height="16" backcolor="#FFFFFF"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dashed"/>
+					</graphicElement>
+				</rectangle>
+				<textField>
+					<reportElement uuid="4df07261-1158-4433-9822-41025b746eb7" x="74" y="1" width="100" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CreditId}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="1e3d917d-cd75-421c-ada0-5cdb6c7c3866" x="9" y="25" width="38" height="15" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[ins. No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="171f429b-0fb6-4441-8380-3077bb9f60ca" x="52" y="25" width="68" height="15" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Due Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="a2005728-b6f8-45ab-aa5b-bdf289d72b4d" x="125" y="25" width="82" height="15" forecolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Clear Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="020fc1a1-1454-454b-bd84-ab5218f65299" x="377" y="25" width="71" height="15" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Paied Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="8e728343-34a6-495a-8d18-df5e24343933" x="456" y="25" width="78" height="15" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Balance]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="2c17b66f-4c1b-437a-8a98-af6fd5c4026e" x="285" y="25" width="85" height="15" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Install Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="5e48440d-7bf7-4396-aefc-22ce75e4be8b" x="5" y="1" width="69" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Agriment No]]></text>
+				</staticText>
+				<textField pattern="yyyy-MM-dd">
+					<reportElement uuid="b18c9a03-46da-4173-acca-31869bb44392" x="285" y="1" width="100" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{AGDate}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="9198e23b-771e-43fd-a123-22ffb4468917" x="204" y="1" width="81" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Agriment Date]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="71">
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement uuid="365d4891-d360-41de-a2de-12723ba224d0" x="456" y="29" width="78" height="14"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{panalty}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="90b623d8-3359-4d74-a2f7-f09ea4f5b295" x="356" y="29" width="100" height="14" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Total Panalty]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement uuid="775346d5-aebe-484c-a7a9-656675861980" x="456" y="15" width="78" height="14"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{rebit}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="606ace27-9b4f-4b81-8be5-ab23b958673c" x="356" y="15" width="100" height="14" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Total Rebit]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="34f261cc-dc62-44c8-8cac-028f42758413" x="270" y="1" width="100" height="14" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement uuid="320c2d6c-8f1a-4762-8798-ec0bc8ab19d4" x="377" y="1" width="71" height="14"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totAmount}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement uuid="67e9a055-bb2d-489a-a0bf-3eaecbbb657c" x="456" y="1" width="78" height="14"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totBalance}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="b2a728d9-c9fc-4af2-985b-d029ca957e2e" x="-36" y="64" width="595" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement uuid="b67c8a25-9efa-4f77-a848-cf07967996a3" x="456" y="45" width="78" height="14"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TotPayble}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="d0b98243-246c-4470-81db-5df497da1efb" x="356" y="45" width="100" height="14" forecolor="#000000"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					</textElement>
+					<text><![CDATA[Due Amount]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="38570fe5-89bd-4820-ae74-b7549e55c01a" x="397" y="43" width="137" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="686517b5-2f6f-4c31-a8d0-338055b69e12" x="397" y="59" width="137" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="ec4e86d4-cd34-41f6-9efa-7784ecb7d1c4" x="397" y="61" width="137" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c6be8c84-7461-46ae-899e-c9ce93b4f85a" x="0" y="0" width="538" height="45"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="27" splitType="Stretch">
+			<textField pattern="">
+				<reportElement uuid="cfa89139-3f97-41da-af53-11ee6de2bf28" mode="Transparent" x="4" y="2" width="534" height="22" backcolor="#CCCCCC"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Members Payment History For - "+$F{Title}+" "+$F{PrintName}+" - "+$P{Customer}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="79552f87-6b12-4ac2-884f-e1e2bb4abd42" x="285" y="0" width="85" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TotInstallVal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b88c5a2d-164a-4628-8f24-c6e34e31f9d5" x="9" y="0" width="38" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{installNo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement uuid="9928e30b-8eee-4bdb-90d5-2ce9e5735ff3" x="52" y="0" width="68" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DueDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="759c358f-a041-48a9-a2a0-88ca47245af3" x="377" y="0" width="71" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PayAmount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement uuid="9f13f49c-7dd3-46db-8c24-617ed96f4829" x="456" y="0" width="78" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Balance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="322d45db-ae5c-453f-84ef-7af687977be1" x="125" y="0" width="82" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ClearDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="389bfe11-c123-4eab-8372-d18f67f2558c" x="4" y="13" width="534" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="36" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="f1b1ea19-5b2d-4e1c-8e06-8fe1fbb47802" x="0" y="0" width="538" height="36"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "page_Footer.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="45" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="afbc2df3-6798-4923-b5dc-e619eb65b14d" x="0" y="25" width="539" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[---------- End of the Report ----------]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

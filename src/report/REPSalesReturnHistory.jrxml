@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPCreditors" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c164427-adf3-4df8-9969-6f55683fd426">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fdate" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="edate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+		salesreturn.InvoNo,
+		salesreturn.RetDate,
+		salesreturn.ItemCode,
+		salesreturn.qty,
+		salesreturn.ReturnQty,
+		salesreturn.note,
+		itemmaster.ShortName
+from salesreturn
+	left join itemmaster on itemmaster.ItemCode = salesreturn.ItemCode
+where salesreturn.ReturnQty > 0 and salesreturn.RetDate between $P{fdate} and $P{edate}
+order by salesreturn.RetDate]]>
+	</queryString>
+	<field name="InvoNo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="RetDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ItemCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qty" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ReturnQty" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="note" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ShortName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="dg">
+		<groupExpression><![CDATA[$F{RetDate}]]></groupExpression>
+		<groupHeader>
+			<band height="31" splitType="Immediate">
+				<textField pattern="yyyy-MM-dd">
+					<reportElement uuid="f8458e3b-4f90-413a-b808-5dafe63c102e" mode="Opaque" x="0" y="1" width="555" height="17" forecolor="#333333" backcolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true"/>
+						<paragraph leftIndent="30"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{RetDate}]]></textFieldExpression>
+				</textField>
+				<rectangle>
+					<reportElement uuid="41c27e6b-539f-4ec3-ad43-930c9517de52" mode="Opaque" x="23" y="16" width="532" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dashed"/>
+					</graphicElement>
+				</rectangle>
+				<staticText>
+					<reportElement uuid="e9b88207-9fef-439d-9004-f5bcc7bc3d24" mode="Transparent" x="104" y="17" width="72" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[ItemCode]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="91474811-6759-4933-af57-34f0b5297f05" mode="Transparent" x="178" y="17" width="161" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[ItemDescription]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="b5744a6e-48fb-4c6b-8700-91aee0674864" mode="Transparent" x="340" y="17" width="41" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[Qty]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="33262eb5-b433-4414-8905-3a7477d8969f" mode="Transparent" x="391" y="17" width="75" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[Return]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="ac2d186a-e7b1-41bb-9ec4-a630e8afaf18" mode="Transparent" x="469" y="17" width="82" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[Reson]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="37e3ef63-2b3c-49ad-a402-ed90f3e503d1" mode="Transparent" x="23" y="17" width="75" height="13" forecolor="#000000" backcolor="#000000"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8"/>
+						<paragraph leftIndent="4"/>
+					</textElement>
+					<text><![CDATA[Invoice No]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="52">
+				<line>
+					<reportElement uuid="040a197d-a4ca-4f26-a4af-93992c16be36" x="-20" y="31" width="595" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c6be8c84-7461-46ae-899e-c9ce93b4f85a" x="23" y="0" width="532" height="45"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Headersm.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement uuid="95f726e7-a64f-485c-b456-6a2c81f652f9" x="23" y="26" width="528" height="16" backcolor="#999999"/>
+				<graphicElement>
+					<pen lineWidth="0.0"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement uuid="c13a33cb-5ec5-40ad-9cd9-5f53dc779823" x="23" y="26" width="505" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sales Return Report From " + $P{fdate} + " to " + $P{edate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement uuid="bafad929-5f11-408c-b138-0f2da612712d" x="100" y="0" width="72" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="61d205e5-ff12-414c-9c47-b21d373011ac" x="178" y="0" width="160" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ShortName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="80d0be2f-ca8a-4394-a5a3-616ac1d0e663" x="344" y="0" width="37" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{qty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement uuid="6be9e8f7-611e-4a44-9503-5589482d0c6f" x="391" y="0" width="75" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ReturnQty}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement uuid="750fe17a-7142-4c3b-8821-010f03a33fe7" x="27" y="0" width="70" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{InvoNo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="0a1bb655-b1e4-4582-9dff-da570fa76488" x="23" y="15" width="532" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#0.00" isBlankWhenNull="true">
+				<reportElement uuid="890de455-61f4-48e5-884d-a04af3642e01" x="469" y="0" width="82" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{note}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="3" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="24" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9ff6f4e3-8cb8-4517-8b2b-75e6b290a604" x="389" y="1" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="9f0f501a-9a5d-4dc5-a931-a6edbec0ef9b" x="469" y="1" width="40" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="2" splitType="Stretch"/>
+	</summary>
+</jasperReport>

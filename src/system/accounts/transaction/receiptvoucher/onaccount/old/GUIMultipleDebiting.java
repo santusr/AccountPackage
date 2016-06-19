@@ -1,0 +1,693 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/*
+ * GUIMultipliDebiting.java
+ *
+ * Created on Jul 19, 2013, 7:56:32 PM
+ */
+package system.accounts.transaction.receiptvoucher.onaccount.old;
+
+import core.Locals;
+import javax.swing.table.DefaultTableModel;
+import system.accounts.transaction.cheque.OBJCheque;
+import system.accounts.transaction.receiptvoucher.againstinvoice.SERVouch;
+import system.accounts.transaction.receiptvoucher.onaccount.JournalEntryPanal;
+import system.accounts.transaction.receiptvoucher.onaccount.OBJEntry;
+import system.accounts.transaction.receiptvoucher.onaccount.OBJJVEntry;
+
+/**
+ *
+ * @author dell
+ */
+public class GUIMultipleDebiting extends javax.swing.JPanel {
+
+    /**
+     * Creates new form GUIMultipliDebiting
+     */
+    public GUIMultipleDebiting() {
+        initComponents();
+        initOthers();
+    }
+
+    void save() {
+        System.out.println("Rec on account");
+    }
+
+    private void addEntry() {
+        entryPanal = new JournalEntryPanal(null, true);
+        entryPanal.setVisible(true);
+        if (JournalEntryPanal.entry != null && !JournalEntryPanal.entry.getAccount().equals("") && JournalEntryPanal.entry.getAccount() != null) {
+            loadCreditTable();
+        }
+    }
+
+    private void loadCreditTable() {
+        this.entry = JournalEntryPanal.entry;
+        System.out.println("Enty = " + JournalEntryPanal.entry.getAmount());
+        System.out.println("Enty this = " + entry.getAmount());
+        jVEntry.getEntrys().add(entry);
+        JournalEntryPanal.entry = null;
+        DefaultTableModel dt = (DefaultTableModel) tblCredit.getModel();
+        dt.addRow(new Object[]{"", entry.getAccount(), entry.getAccountName(), entry.getAmount(), entry.getNaration()});
+        doCall();
+    }
+
+    private void doCall() {
+        double debitAmount = 0.00;
+        double creditAmount = 0.00;
+
+        if (tblDebit.getRowCount() > 0) {
+            for (int i = 0; i < tblDebit.getRowCount(); i++) {
+                debitAmount = debitAmount + Double.parseDouble(tblDebit.getValueAt(i, 6).toString());
+            }
+        }
+
+        if (tblCredit.getRowCount() > 0) {
+            for (int i = 0; i < tblCredit.getRowCount(); i++) {
+                creditAmount = creditAmount + Double.parseDouble(tblCredit.getValueAt(i, 3).toString());
+            }
+        }
+
+        txtTotalDebit.setText(Locals.currencyFormat(debitAmount));
+        txtTotalCredit.setText(Locals.currencyFormat(creditAmount));
+        if (debitAmount > creditAmount) {
+            txtDebitDefarance.setText(Locals.currencyFormat(debitAmount - creditAmount));
+            txtCreditDefarance.setText("0.00");
+        } else {
+            txtCreditDefarance.setText(Locals.currencyFormat(creditAmount - debitAmount));
+            txtDebitDefarance.setText("0.00");
+        }
+    }
+
+    private void clearTable() {
+        int row = tblDebit.getRowCount();
+        for (int i = 0; i < row; i++) {
+            ((DefaultTableModel) tblDebit.getModel()).removeRow(0);
+        }
+
+        row = tblCredit.getRowCount();
+        for (int i = 0; i < row; i++) {
+            ((DefaultTableModel) tblCredit.getModel()).removeRow(0);
+        }
+    }
+
+    private void doNew() {
+        txtJVDate.setDate(Locals.toDate(Locals.currentDate_F2()));
+        txtNarration.setText("");
+        txtTotalDebit.setText("0.00");
+        txtTotalCredit.setText("0.00");
+        txtDebitDefarance.setText("0.00");
+        txtCreditDefarance.setText("0.00");
+        clearTable();
+        setID();
+//        buttonMode();
+    }
+
+    private void setID() {
+        txtjvNo.setText(SERVouch.getID());
+    }
+
+//    private void addCheque() {
+//        GUIMultipleDebiting.cheque = null;
+//        new PaymentPanel(null, true).setVisible(true);
+//
+//        if (GUIMultipleDebiting.cheque != null) {
+//            loadTable();
+//        }
+//    }
+//
+//    private void loadTable() {
+//        OBJCheque cheque = GUIMultipleDebiting.cheque;
+//        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+//        dt.addRow(new Object[]{cheque.getChqeNo(), cheque.getRDate(), cheque.getBank(), cheque.getAmount(), cheque.getRemarks()});
+//        doCall();
+//    }
+
+//    private void doCall() {
+//        double cash = 0.00;
+//        double cheque = 0.00;
+//
+//        if (!txtCash.getText().isEmpty()) {
+//            cash = Double.parseDouble(txtCash.getText());
+//        }
+//        if (jTable1.getRowCount() > 0) {
+//            for (int i = 0; i < jTable1.getRowCount(); i++) {
+//                cheque = cheque + Double.parseDouble(jTable1.getValueAt(i, 3).toString());
+//            }
+//        }
+//        txtCheque.setText(Locals.currencyFormat(cheque));
+//        txtValue.setText(Locals.currencyFormat(cash + cheque));
+//    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    private void initOthers() {
+        jVEntry = new OBJJVEntry();
+        clearTable();
+//        buttonMode();
+        doNew();
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLayeredPane3 = new javax.swing.JLayeredPane();
+        txtCostCenter = new javax.swing.JTextField();
+        cmdArea2 = new javax.swing.JButton();
+        txtCost = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtjvNo = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        txtjvnletter = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtAccountant = new javax.swing.JTextField();
+        txtApproved = new javax.swing.JTextField();
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        jLabel14 = new javax.swing.JLabel();
+        txtTotalDebit = new javax.swing.JFormattedTextField();
+        txtTotalCredit = new javax.swing.JFormattedTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtDebitDefarance = new javax.swing.JFormattedTextField();
+        txtCreditDefarance = new javax.swing.JFormattedTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        txtJVDate = new com.toedter.calendar.JDateChooser();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblDebit = new javax.swing.JTable();
+        cmdAddDebit = new javax.swing.JButton();
+        cmdRemoveDebit = new javax.swing.JButton();
+        tblCreditPnl = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblCredit = new javax.swing.JTable();
+        cmdAddCredit = new javax.swing.JButton();
+        cmdRemoveCredit = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtNarration = new javax.swing.JTextArea();
+
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        txtCostCenter.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLayeredPane3.add(txtCostCenter);
+        txtCostCenter.setBounds(0, 0, 50, 18);
+
+        cmdArea2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/tool bar/help.png"))); // NOI18N
+        cmdArea2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        cmdArea2.setContentAreaFilled(false);
+        jLayeredPane3.add(cmdArea2);
+        cmdArea2.setBounds(53, 0, 20, 20);
+
+        txtCost.setEditable(false);
+        txtCost.setBackground(new java.awt.Color(255, 255, 241));
+        txtCost.setForeground(new java.awt.Color(153, 0, 0));
+        txtCost.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLayeredPane3.add(txtCost);
+        txtCost.setBounds(75, 0, 150, 18);
+
+        jLabel10.setText("Cost Center");
+
+        jLabel5.setText("Narration");
+
+        txtjvNo.setEditable(false);
+        txtjvNo.setBackground(new java.awt.Color(255, 255, 233));
+        txtjvNo.setForeground(new java.awt.Color(153, 0, 0));
+        txtjvNo.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jLabel3.setText("J.V. Date");
+
+        jLabel1.setForeground(new java.awt.Color(153, 0, 0));
+        jLabel1.setText("Vou. Number");
+
+        txtjvnletter.setEditable(false);
+        txtjvnletter.setBackground(new java.awt.Color(255, 255, 233));
+        txtjvnletter.setForeground(new java.awt.Color(153, 0, 0));
+        txtjvnletter.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtjvnletter.setText("R");
+        txtjvnletter.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jLabel6.setText("Accountant");
+
+        jLabel7.setText("Approved By");
+
+        txtAccountant.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        txtApproved.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jLabel14.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel14.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("Credit");
+        jLabel14.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLabel14.setOpaque(true);
+        jLayeredPane1.add(jLabel14);
+        jLabel14.setBounds(220, 0, 110, 20);
+
+        txtTotalDebit.setBackground(new java.awt.Color(204, 204, 255));
+        txtTotalDebit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        txtTotalDebit.setForeground(new java.awt.Color(153, 0, 0));
+        txtTotalDebit.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtTotalDebit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTotalDebit.setText("0.00");
+        jLayeredPane1.add(txtTotalDebit);
+        txtTotalDebit.setBounds(110, 20, 110, 20);
+
+        txtTotalCredit.setBackground(new java.awt.Color(204, 204, 255));
+        txtTotalCredit.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        txtTotalCredit.setForeground(new java.awt.Color(153, 0, 0));
+        txtTotalCredit.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtTotalCredit.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtTotalCredit.setText("0.00");
+        jLayeredPane1.add(txtTotalCredit);
+        txtTotalCredit.setBounds(220, 20, 110, 20);
+
+        jLabel16.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel16.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Defarance");
+        jLabel16.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLabel16.setOpaque(true);
+        jLayeredPane1.add(jLabel16);
+        jLabel16.setBounds(0, 40, 110, 20);
+
+        txtDebitDefarance.setBackground(new java.awt.Color(204, 204, 255));
+        txtDebitDefarance.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        txtDebitDefarance.setForeground(new java.awt.Color(153, 0, 0));
+        txtDebitDefarance.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtDebitDefarance.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDebitDefarance.setText("0.00");
+        jLayeredPane1.add(txtDebitDefarance);
+        txtDebitDefarance.setBounds(110, 40, 110, 20);
+
+        txtCreditDefarance.setBackground(new java.awt.Color(204, 204, 255));
+        txtCreditDefarance.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        txtCreditDefarance.setForeground(new java.awt.Color(153, 0, 0));
+        txtCreditDefarance.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtCreditDefarance.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCreditDefarance.setText("0.00");
+        jLayeredPane1.add(txtCreditDefarance);
+        txtCreditDefarance.setBounds(220, 40, 110, 20);
+
+        jLabel15.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel15.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel15.setText("Total");
+        jLabel15.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLabel15.setOpaque(true);
+        jLayeredPane1.add(jLabel15);
+        jLabel15.setBounds(0, 20, 110, 20);
+
+        jLabel17.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel17.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLabel17.setOpaque(true);
+        jLayeredPane1.add(jLabel17);
+        jLabel17.setBounds(0, 0, 110, 20);
+
+        jLabel18.setBackground(new java.awt.Color(102, 102, 102));
+        jLabel18.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setText("Debit");
+        jLabel18.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        jLabel18.setOpaque(true);
+        jLayeredPane1.add(jLabel18);
+        jLabel18.setBounds(110, 0, 110, 20);
+
+        txtJVDate.setDateFormatString("yyyy-MM-dd");
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Debit Account (Payment)"));
+
+        jScrollPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tblDebit.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "", "PDC", "Debit A/C", "Cheque No", "Chq. Date", "Drn Bank", "Amount", "Narration"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false, false, false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblDebit.setGridColor(new java.awt.Color(204, 204, 204));
+        tblDebit.setOpaque(false);
+        jScrollPane1.setViewportView(tblDebit);
+        if (tblDebit.getColumnModel().getColumnCount() > 0) {
+            tblDebit.getColumnModel().getColumn(0).setResizable(false);
+            tblDebit.getColumnModel().getColumn(0).setPreferredWidth(15);
+            tblDebit.getColumnModel().getColumn(1).setResizable(false);
+            tblDebit.getColumnModel().getColumn(1).setPreferredWidth(10);
+            tblDebit.getColumnModel().getColumn(2).setResizable(false);
+            tblDebit.getColumnModel().getColumn(2).setPreferredWidth(55);
+            tblDebit.getColumnModel().getColumn(3).setResizable(false);
+            tblDebit.getColumnModel().getColumn(3).setPreferredWidth(60);
+            tblDebit.getColumnModel().getColumn(4).setResizable(false);
+            tblDebit.getColumnModel().getColumn(4).setPreferredWidth(40);
+            tblDebit.getColumnModel().getColumn(5).setResizable(false);
+            tblDebit.getColumnModel().getColumn(5).setPreferredWidth(35);
+            tblDebit.getColumnModel().getColumn(6).setResizable(false);
+            tblDebit.getColumnModel().getColumn(6).setPreferredWidth(80);
+            tblDebit.getColumnModel().getColumn(7).setResizable(false);
+            tblDebit.getColumnModel().getColumn(7).setPreferredWidth(115);
+        }
+
+        cmdAddDebit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmdAddDebit.setForeground(new java.awt.Color(102, 102, 102));
+        cmdAddDebit.setText("ADD DEBIT");
+
+        cmdRemoveDebit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmdRemoveDebit.setForeground(new java.awt.Color(102, 102, 102));
+        cmdRemoveDebit.setText("REMOVE");
+        cmdRemoveDebit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdRemoveDebitActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 630, Short.MAX_VALUE)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(cmdAddDebit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdRemoveDebit))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdAddDebit, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdRemoveDebit, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+        );
+
+        tblCreditPnl.setBorder(javax.swing.BorderFactory.createTitledBorder("Credit Account"));
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        tblCredit.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "", "Credit A/C", "Account Name", "Amount", "Narration"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCredit.setGridColor(new java.awt.Color(204, 204, 204));
+        tblCredit.setOpaque(false);
+        jScrollPane2.setViewportView(tblCredit);
+        if (tblCredit.getColumnModel().getColumnCount() > 0) {
+            tblCredit.getColumnModel().getColumn(0).setResizable(false);
+            tblCredit.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tblCredit.getColumnModel().getColumn(1).setResizable(false);
+            tblCredit.getColumnModel().getColumn(1).setPreferredWidth(65);
+            tblCredit.getColumnModel().getColumn(2).setResizable(false);
+            tblCredit.getColumnModel().getColumn(2).setPreferredWidth(200);
+            tblCredit.getColumnModel().getColumn(3).setResizable(false);
+            tblCredit.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tblCredit.getColumnModel().getColumn(4).setResizable(false);
+            tblCredit.getColumnModel().getColumn(4).setPreferredWidth(110);
+        }
+
+        cmdAddCredit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmdAddCredit.setForeground(new java.awt.Color(102, 102, 102));
+        cmdAddCredit.setText("ADD CREDIT");
+        cmdAddCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdAddCreditActionPerformed(evt);
+            }
+        });
+
+        cmdRemoveCredit.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        cmdRemoveCredit.setForeground(new java.awt.Color(102, 102, 102));
+        cmdRemoveCredit.setText("REMOVE");
+        cmdRemoveCredit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdRemoveCreditActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout tblCreditPnlLayout = new javax.swing.GroupLayout(tblCreditPnl);
+        tblCreditPnl.setLayout(tblCreditPnlLayout);
+        tblCreditPnlLayout.setHorizontalGroup(
+            tblCreditPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+            .addGroup(tblCreditPnlLayout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(cmdAddCredit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cmdRemoveCredit))
+        );
+        tblCreditPnlLayout.setVerticalGroup(
+            tblCreditPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tblCreditPnlLayout.createSequentialGroup()
+                .addGroup(tblCreditPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(cmdAddCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdRemoveCredit, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+        );
+
+        txtNarration.setColumns(20);
+        txtNarration.setRows(2);
+        jScrollPane3.setViewportView(txtNarration);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtjvnletter, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtjvNo, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtJVDate, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtAccountant))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                    .addComponent(jLabel10)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtApproved)
+                                .addContainerGap())
+                            .addComponent(jLayeredPane1)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(tblCreditPnl, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(6, 6, 6))))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtjvNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtjvnletter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3))
+                    .addComponent(txtJVDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tblCreditPnl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLayeredPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel5))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtApproved, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtAccountant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void cmdRemoveDebitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRemoveDebitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdRemoveDebitActionPerformed
+
+    private void cmdRemoveCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRemoveCreditActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmdRemoveCreditActionPerformed
+
+    private void cmdAddCreditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAddCreditActionPerformed
+        addEntry();
+    }//GEN-LAST:event_cmdAddCreditActionPerformed
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton cmdAddCredit;
+    private javax.swing.JButton cmdAddDebit;
+    private javax.swing.JButton cmdArea2;
+    private javax.swing.JButton cmdRemoveCredit;
+    private javax.swing.JButton cmdRemoveDebit;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLayeredPane jLayeredPane1;
+    private javax.swing.JLayeredPane jLayeredPane3;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tblCredit;
+    private javax.swing.JPanel tblCreditPnl;
+    private javax.swing.JTable tblDebit;
+    private javax.swing.JTextField txtAccountant;
+    private javax.swing.JTextField txtApproved;
+    private javax.swing.JTextField txtCost;
+    private javax.swing.JTextField txtCostCenter;
+    private javax.swing.JFormattedTextField txtCreditDefarance;
+    private javax.swing.JFormattedTextField txtDebitDefarance;
+    private com.toedter.calendar.JDateChooser txtJVDate;
+    private javax.swing.JTextArea txtNarration;
+    private javax.swing.JFormattedTextField txtTotalCredit;
+    private javax.swing.JFormattedTextField txtTotalDebit;
+    private javax.swing.JTextField txtjvNo;
+    private javax.swing.JTextField txtjvnletter;
+    // End of variables declaration//GEN-END:variables
+    private JournalEntryPanal entryPanal;
+    private OBJJVEntry jVEntry;
+    private OBJEntry entry;
+    public static OBJCheque cheque;
+}

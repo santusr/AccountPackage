@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPInvoice" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ac36a522-1ad1-4552-92d3-cc29b5366cc5">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="a" class="java.math.BigDecimal" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECt ItemCode a,ShortName,StockInHand,CostRate,SellingRate,Status FROM itemmaster WHERE Status = '0']]>
+	</queryString>
+	<field name="a" class="java.lang.String"/>
+	<field name="ShortName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="StockInHand" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="CostRate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="SellingRate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="SumCost" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CostRate}.multiply($F{StockInHand})]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="SumSalling" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[($F{SellingRate}.multiply($F{StockInHand}))]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c280a404-1899-4e1a-9b44-58593de1ac5b" x="1" y="1" width="555" height="89"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="034044dd-c74e-48e7-9a2e-351581116b5d" x="7" y="13" width="193" height="14"/>
+				<textElement>
+					<font fontName="Verdana" size="9" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Price List of all items.]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<line>
+				<reportElement uuid="b293d88d-0960-480d-b1f5-8e3c44a181ab" x="3" y="21" width="548" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="f0362b00-187c-4562-aeca-d8c29cc72bf6" x="3" y="1" width="548" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="47039bbb-d7ec-4a25-be5e-056ce12799db" x="295" y="1" width="57" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Cost Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="13ba2b14-ddd1-4228-bf6d-10d85cc79029" x="78" y="1" width="175" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Description]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d627f74a-a6aa-4a45-a974-41eb74608f4d" x="425" y="2" width="57" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Saling Rate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="92610058-f7a1-4963-91b2-77638d5bdf16" x="487" y="2" width="61" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3656bc06-35c1-4733-847c-92b3b6ffc04d" x="358" y="1" width="61" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Total Cost]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f44d3581-818a-4b13-80ae-13bad0339688" x="3" y="1" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Item Code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2f2549cb-e6f7-47dd-8311-e27e6238b3ad" x="256" y="2" width="35" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="dba58bcb-1d5e-465c-94b5-cf552a664ddb" x="550" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="3b25ca23-b792-4690-874a-da0821c12c77" x="256" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="b86725b8-3741-4629-a892-7af646acccaa" x="422" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="2a3d58fa-bdf8-4d6e-9ef4-4be6095f0731" x="484" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="0f19eb1e-2def-446c-ad6e-b70229959dd5" x="355" y="1" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="bf173198-4e9a-463c-b4f7-b0a1dcb4fa1a" x="75" y="1" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="ff442d39-2ec9-423a-9194-33a31fd10f3c" x="3" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="e3b804cf-f797-43cd-9b61-c282cf108b75" x="293" y="2" width="1" height="20"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement uuid="9910b7f7-ec5b-4d62-b682-a7576c1e5079" x="257" y="1" width="35" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{StockInHand}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="49d2fb17-0c61-4e83-9093-063b3cb96c3b" x="3" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#0.00">
+				<reportElement uuid="147118cc-def4-46ef-8a03-ca7747aef6ce" x="358" y="1" width="61" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{StockInHand}.multiply($F{CostRate})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="ac916171-6b1d-4935-b33b-aa7ffda771b4" x="296" y="1" width="57" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CostRate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement uuid="75a882a3-4a0d-4674-ac8a-768fc0629a93" x="488" y="2" width="61" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SellingRate}.multiply($F{StockInHand})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="c47ef509-a52b-4fde-99a9-dcca5c07da75" x="293" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="1abc50c0-4a94-4ba8-a49a-d2e5b29bfb8b" x="422" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="c36162cb-081e-42bf-a8d4-93f564c2feae" x="426" y="1" width="57" height="14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SellingRate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="03080afe-d41f-4879-b528-966d628f4ec0" x="256" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="bdea904e-1407-44cf-8dee-36802af6d1dd" x="550" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="9d25f36c-8a8b-4bd6-9c16-48d3cc9d74f0" x="75" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="9d0b8ea9-62a9-4104-8092-70f91678b692" x="484" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="5d4349a6-ba93-47a5-b9c3-0ab28413c94e" x="355" y="0" width="1" height="15"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="983ad235-38cb-4f8b-b513-f091aceccefd" x="80" y="1" width="175" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ShortName}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement uuid="abb65075-6887-41af-aab5-797b06dcb484" x="7" y="1" width="65" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{a}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="58" splitType="Stretch">
+			<line>
+				<reportElement uuid="2785b714-0484-494b-b32e-81d79d6deca6" x="3" y="0" width="548" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<subreport>
+				<reportElement uuid="a90dbf37-d0b7-4e1f-a9ae-c937cd6ff72a" x="3" y="25" width="549" height="29"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Footer.jasper"]]></subreportExpression>
+			</subreport>
+			<textField pattern="#0.00">
+				<reportElement uuid="58f708b8-d1c8-46f6-a2ae-06b67a5c54ad" x="328" y="1" width="92" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumCost}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#0.00">
+				<reportElement uuid="4bca7979-8418-42ec-926d-a47886fe7b88" x="456" y="1" width="92" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{SumSalling}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="1146b31f-3ed7-4eeb-918f-48981af99507" x="354" y="18" width="69" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="79063e02-c1ab-4635-967c-4867f47b19d9" x="354" y="19" width="69" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="2be880e4-16bb-4ed7-bfd3-a3bbf6375b07" x="479" y="18" width="69" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="62cfd2d6-77fa-4ff1-94d2-4acf01022e09" x="479" y="19" width="69" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

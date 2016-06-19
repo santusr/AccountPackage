@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPCreditors" pageWidth="595" pageHeight="842" columnWidth="539" leftMargin="36" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c164427-adf3-4df8-9969-6f55683fd426">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[".\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fdate" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="edate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    "Invoice" AS Description, invohis.invoNo, invohis.itemcode, invohis.itemDescription, invohis.qty, invohis.rate,
+    invohis.amount, invohis.warranty, invoHead.InvoDate
+FROM
+    invoicehistory as invohis
+    LEFT JOIN
+        (SELECT invoiceheader.InvoDate, invoiceheader.invoNo from invoiceheader) as invoHead on invohis.invoNo = invoHead.invoNo
+WHERE
+    invohis.status = 'SALED' AND ItemCode = 'AL26'
+
+
+UNION
+
+
+SELECT
+    "GRN" AS Description, purhis.purNo as InvoNo, purhis.itemcode, purhis.itemDescription, purhis.qty, purhis.rate,
+    purhis.amount, purhis.warranty, purHead.InvoDate
+FROM
+    purchasehistory as purhis
+    LEFT JOIN
+        (SELECT purchaseheader.purDate as invoDate, purchaseheader.purNo from purchaseheader) as purHead on purhis.purNo = purHead.purNo
+WHERE
+    purhis.status = '0' AND ItemCode = 'AL26'
+
+ORDER BY invoDate
+]]>
+	</queryString>
+	<field name="Description" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="invoNo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemcode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="itemDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="qty" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="warranty" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="InvoDate" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="totNa" class="java.math.BigDecimal" resetType="Group" resetGroup="g1" calculation="Sum">
+		<variableExpression><![CDATA[$F{net}]]></variableExpression>
+	</variable>
+	<variable name="totPay" class="java.math.BigDecimal" resetType="Group" resetGroup="g1" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay}]]></variableExpression>
+	</variable>
+	<variable name="totBal" class="java.math.BigDecimal" resetType="Group" resetGroup="g1" calculation="Sum">
+		<variableExpression><![CDATA[$F{DueAmount}]]></variableExpression>
+	</variable>
+	<variable name="totNatyp" class="java.math.BigDecimal" resetType="Group" resetGroup="invoTypeG" calculation="Sum">
+		<variableExpression><![CDATA[$F{net}]]></variableExpression>
+	</variable>
+	<variable name="totpaytyp" class="java.math.BigDecimal" resetType="Group" resetGroup="invoTypeG" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay}]]></variableExpression>
+	</variable>
+	<variable name="totbaltyp" class="java.math.BigDecimal" resetType="Group" resetGroup="invoTypeG" calculation="Sum">
+		<variableExpression><![CDATA[$F{DueAmount}]]></variableExpression>
+	</variable>
+	<variable name="gtamount" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{net}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="gtpay" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay}]]></variableExpression>
+	</variable>
+	<variable name="gtbal" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{DueAmount}]]></variableExpression>
+	</variable>
+	<group name="g1">
+		<groupExpression><![CDATA[$F{CostCode}]]></groupExpression>
+		<groupHeader>
+			<band height="18" splitType="Stretch">
+				<textField>
+					<reportElement uuid="8b6871a8-859e-4ff0-8542-48ae93f210fa" mode="Opaque" x="4" y="2" width="532" height="15" backcolor="#FFFFFF"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+						<paragraph leftIndent="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Description}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="21">
+				<textField pattern="#,##0.00">
+					<reportElement uuid="06926b7e-dba4-4f9f-8ab8-a34d14a95faf" x="326" y="2" width="70" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totNa}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="de259112-f37c-4d51-ade7-fcf810c99bf8" x="398" y="2" width="68" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totPay}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement uuid="92556eaf-fb13-4626-b5fe-e7c6fad42698" x="466" y="2" width="70" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totBal}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="4e373edb-1259-442e-aea4-60549dd28f0b" x="272" y="18" width="267" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="204a554b-f544-4054-81c2-8ddc1423593e" x="272" y="20" width="267" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="816a0aa7-57a7-40f2-96d7-59dc83165a01" x="251" y="2" width="75" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[TOTAL]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="invoTypeG">
+		<groupExpression><![CDATA[$F{invoType}]]></groupExpression>
+		<groupHeader>
+			<band height="34">
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="4c2c57e4-5012-46f8-ae4c-e1751121f67f" mode="Opaque" x="4" y="1" width="114" height="15" forecolor="#FFFFFF" backcolor="#333333"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="false"/>
+						<paragraph leftIndent="7"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement uuid="c33e257f-a2d5-40e4-bf9e-1b4d0906221b" x="6" y="17" width="59" height="16"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Invoice No]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="c17e252c-c75e-4348-b815-efd5b1e041fa" x="329" y="17" width="70" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Net Amount]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="d7b7cb7e-e521-4235-b719-054b95c7ddfb" x="70" y="17" width="67" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Invoice Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="497bc0b2-ff93-4f61-8801-4de893dd3845" x="402" y="17" width="67" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Total Pay]]></text>
+				</staticText>
+				<staticText>
+					<reportElement uuid="4a05ae60-3465-4afc-bdd8-a9d09bdaf1b5" x="469" y="17" width="68" height="16"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[DueAmount]]></text>
+				</staticText>
+				<line>
+					<reportElement uuid="8666bbab-94f3-4cf4-baf9-6b28355f1487" x="1" y="33" width="538" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement uuid="cf97c8b9-9e5a-4e8a-a83e-472e6707c7eb" x="144" y="17" width="185" height="16"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Verdana" size="8" isBold="true" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[Customer Name]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="24">
+				<staticText>
+					<reportElement uuid="2cc1fb15-d060-4eb8-b577-f69823c46e9b" x="233" y="2" width="91" height="16"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="false" isItalic="true"/>
+					</textElement>
+					<text><![CDATA[SUB TOTAL]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="15eb6d39-234e-49c9-9a09-be76a8b03966" x="324" y="2" width="70" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totNatyp}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement uuid="ede3bb08-d78c-45a9-8759-64fd1416633d" x="249" y="15" width="288" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement uuid="c5a6d221-afd7-4d1b-85e0-73c5d6ed5c6e" x="249" y="17" width="288" height="1"/>
+					<graphicElement>
+						<pen lineWidth="0.5"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="f64c70b7-13c5-456c-bfa1-55fee23a7275" x="397" y="2" width="67" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totpaytyp}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement uuid="8aa98f8a-d200-4c34-a70b-f492788cce89" x="465" y="2" width="72" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Verdana" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totbaltyp}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="47" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="c6be8c84-7461-46ae-899e-c9ce93b4f85a" x="0" y="0" width="536" height="45"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Header.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement uuid="c13a33cb-5ec5-40ad-9cd9-5f53dc779823" x="4" y="14" width="537" height="23"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Sales Report From " + $P{fdate} + " to " + $P{edate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement uuid="5b6ed0c6-78fc-4cc9-921f-4e8c31573f65" x="1" y="15" width="538" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="f3867547-acb2-4272-921c-c5e784c18307" x="406" y="0" width="67" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pay}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9761dc69-3fb2-4799-8cff-f6a915dc4643" x="333" y="0" width="70" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{net}]]></textFieldExpression>
+			</textField>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement uuid="50570ace-df0f-4965-9861-1fcf4a2ac033" x="70" y="0" width="67" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="d61adc7b-b38d-49d4-b050-39e52e0b828f" x="10" y="0" width="59" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{invoNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8d83e786-ab0a-4688-90b3-a5d8210460fa" x="472" y="0" width="65" height="15"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DueAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="9e064dac-d0c2-43c0-92a9-9b1d9f4c2664" x="144" y="0" width="189" height="15"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Verdana" size="8" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PrintName} + " ("+$F{CustCode}+ ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="41" splitType="Stretch">
+			<subreport>
+				<reportElement uuid="920b9c21-d123-4eeb-b221-e5a6ab5970b7" x="0" y="2" width="541" height="38"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "page_Footer.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="19" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement uuid="73d6c463-8984-4174-8803-d041389d9859" mode="Opaque" x="1" y="3" width="352" height="16" forecolor="#FFFFFF" backcolor="#00CC00"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["GRAND TOTAL      "+$V{gtamount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="2ee1a67e-c970-404c-9b95-fb7895d63647" mode="Opaque" x="353" y="3" width="89" height="16" forecolor="#FFFFFF" backcolor="#00CC00"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{gtpay}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="78f50ff8-9e5b-4b18-b4d1-6bafc2e756d1" mode="Opaque" x="442" y="3" width="95" height="16" forecolor="#FFFFFF" backcolor="#00CC00"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Verdana" size="11" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{gtbal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

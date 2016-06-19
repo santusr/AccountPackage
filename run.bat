@@ -1,0 +1,1 @@
+java -jar dist/AccountPackage.jar

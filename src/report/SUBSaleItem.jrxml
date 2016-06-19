@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SUBSaleItem" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="6dfbfe59-1841-4fe3-8e6e-b1167f452769">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="fdate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT invoicehistory.ItemCode,invoicehistory.ItemDescription, SUM(invoicehistory.qty) AS t_qty, SUM(invoicehistory.Amount) AS t_Amount FROM invoicehistory, InvoiceHeader WHERE invoicehistory.InvoNo = InvoiceHeader.InvoNo AND InvoiceHeader.InvoDate = $P{fdate} GROUP BY invoicehistory.ItemCode ORDER BY t_Amount DESC]]>
+	</queryString>
+	<field name="ItemCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="ItemDescription" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="t_qty" class="java.math.BigDecimal"/>
+	<field name="t_Amount" class="java.math.BigDecimal"/>
+	<columnHeader>
+		<band height="50">
+			<staticText>
+				<reportElement uuid="ce038f50-10f0-4f10-a32e-13693f32c725" x="1" y="1" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="12" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[ItemCode]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="b211a7d6-c334-44d5-9aec-a27ae00e778d" x="1" y="1" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="10"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ItemCode}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1f543d07-5429-4014-8c70-d11052ec34a3" x="1" y="1" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier New" size="12" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="e6687f05-4ae0-4411-9667-756be4b0a6df" x="1" y="1" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ItemDescription}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="00fd7cc1-127c-4649-9c8d-cf545784d797" x="1" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Courier New" size="12" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[qty]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement uuid="72beb3d7-e13c-4835-a1b9-8e29b7a8ec6f" x="1" y="1" width="100" height="20" backcolor="#E3E3E3"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Dotted"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement uuid="13beb822-e5cd-4867-af2b-e83e7f2f7727" x="1" y="1" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Courier New" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{t_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="50"/>
+	</columnFooter>
+</jasperReport>
