@@ -22,7 +22,6 @@ public class ItemList extends javax.swing.JDialog {
     /**
      * Creates new form ItemList
      */
-    
     public ItemList(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -50,7 +49,7 @@ public class ItemList extends javax.swing.JDialog {
         clearTable();
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
         for (OBJItemSearch item : itemSearchs) {
-            dt.addRow(new Object[]{item, item.getName()});
+            dt.addRow(new Object[]{item, item.getName() + " (" + item.getRate() + ")"});
         }
     }
 
@@ -68,7 +67,7 @@ public class ItemList extends javax.swing.JDialog {
             this.dispose();
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -79,6 +78,7 @@ public class ItemList extends javax.swing.JDialog {
         itemSearchs = SERItemList.itemList(store);
         loadTable();
     }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -164,7 +164,7 @@ public class ItemList extends javax.swing.JDialog {
             .addComponent(jTextField1)
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 177, Short.MAX_VALUE)
+                .addGap(0, 255, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1))
@@ -181,7 +181,7 @@ public class ItemList extends javax.swing.JDialog {
                     .addComponent(jButton2)))
         );
 
-        setBounds(0, 0, 293, 516);
+        setBounds(0, 0, 353, 516);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased

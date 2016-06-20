@@ -23,7 +23,7 @@ public class DAOReminder {
 
     public static ArrayList<LowStockItem> getLowStock(Connection con) throws SQLException {
         ArrayList<LowStockItem> lowStockItems = new ArrayList<>();
-        String query = "SELECt DISTINCT itemmaster.* FROM itemmaster\n"
+        String query = "SELECt DISTINCT itemmaster.*, item_transaction.index_no FROM itemmaster\n"
                 + "		LEFT JOIN item_transaction ON itemmaster.ItemCode = item_transaction.item\n"
                 + " 	WHERE "
                 + "             item_transaction.transaction_type = '" + TransactionType.INVOICE + "' AND \n"

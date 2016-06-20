@@ -34,9 +34,10 @@ class DAOItemList {
                 + "				ItemMaster  \n"
                 + "				LEFT JOIN Stock ON stock.ItemCode = ItemMaster.ItemCode \n"
                 + "WHERE \n"
-                + "				ItemMaster.status = '0' AND \n"
-                + "                             Stock.store = '"+store+"' AND \n"
-                + "				ItemMaster.ItemCode LIKE '" + code + "%'";
+                + "				ItemMaster.status = '0' \n"
+                + "                             AND Stock.store = '" + store + "' \n"
+                + "				AND ItemMaster.ItemCode LIKE '" + code + "%' "
+                + "				OR ItemMaster.Name LIKE '" + code + "%'";
 
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();
@@ -57,8 +58,7 @@ class DAOItemList {
     static ArrayList<OBJItemSearch> getItems(Connection conn, String store) throws SQLException {
         OBJItemSearch obj = null;
         ArrayList<OBJItemSearch> searchs = new ArrayList<>();
-        String sql
-                = "SELECT \n"
+        String sql = "SELECT \n"
                 + "				ItemMaster.ItemCode AS ic, \n"
                 + "				ItemMaster.ShortName AS n, \n"
                 + "				ItemMaster.SellingRate AS rate, \n"
@@ -71,7 +71,7 @@ class DAOItemList {
                 + "				LEFT JOIN Stock ON stock.ItemCode = ItemMaster.ItemCode \n"
                 + "WHERE \n"
                 + "				ItemMaster.status = '0' AND \n"
-                + "                             Stock.store = '"+store+"'";
+                + "                             Stock.store = '" + store + "'";
 
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();

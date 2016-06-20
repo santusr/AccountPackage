@@ -45,6 +45,7 @@ public class GUIShowInvoices extends javax.swing.JFrame {
             dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getPaiedAmount(), objq.getOwingAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate(), objq.getLoanNo(), objq.getStatus().equals("0")? "PENDING" : "PAID"});
             i++;
         }
+        
         calcAll();
     }
 
