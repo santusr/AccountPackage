@@ -37,7 +37,7 @@ class DAOItemList {
                 + "				ItemMaster.status = '0' \n"
                 + "                             AND Stock.store = '" + store + "' \n"
                 + "				AND ItemMaster.ItemCode LIKE '" + code + "%' "
-                + "				OR ItemMaster.Name LIKE '" + code + "%'";
+                + "				OR ItemMaster.ShortName LIKE '" + code + "%'";
 
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();
