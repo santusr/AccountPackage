@@ -302,7 +302,7 @@ public class GUIPayAgainstInvoice extends javax.swing.JInternalFrame {
         txtpayble.setText("0.00");
         txtpay.setText("0.00");
         txtbal.setText("0.00");
-
+        
         txtCid.setText("");
         txtinvo.setText("");
         txtinsNo.setText("");
@@ -486,22 +486,24 @@ public class GUIPayAgainstInvoice extends javax.swing.JInternalFrame {
         accountpackage.AccountPackage.NAME = "";
     }
 
-    private void loadCust(String cd, String fld) {
-        txtName.setText(SERCommen.getDescription("customer", cd, fld, "PrintName"));
-        txtCustAccCode.setText(SERCommen.getDescription("customer", cd, fld, "AccCode"));
+    private void loadCust(String code, String field) {
+        txtName.setText(SERCommen.getDescription("customer", code, field, "PrintName"));
+        txtCustAccCode.setText(SERCommen.getDescription("customer", code, field, "AccCode"));
     }
 
     private void loadInvoice() {
         String Cust = txtCustAccCode.getText();
-        obji = SERInvoList.getList(Cust);
-        clrTable();
-        int i = 1;
-        DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
-        for (OBJInvoList objq : obji) {
-            dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getOwingAmount(), objq.getPaiedAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate()});
-            i++;
+        if (null != Cust && !Cust.isEmpty()) {
+            obji = SERInvoList.getList(Cust);
+            clrTable();
+            int i = 1;
+            DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
+            for (OBJInvoList objq : obji) {
+                dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getOwingAmount(), objq.getPaiedAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate()});
+                i++;
+            }
+            calcAll();
         }
-        calcAll();
     }
 
     private void clrTable() {
@@ -1526,12 +1528,12 @@ private void cmdPrintChqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void txtCustAccCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCustAccCodeActionPerformed
         loadCust(txtCustAccCode.getText(), "AccCode");
-
         loadInvoice();
     }//GEN-LAST:event_txtCustAccCodeActionPerformed
 
     private void cmdCustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCustActionPerformed
         loadCustomer();
+        loadInvoice();
     }//GEN-LAST:event_cmdCustActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked

@@ -22,7 +22,7 @@ public class DBConnection {
     private static Connection con;
     public static String db = "RAP";
     private static String uname = "root";
-    private static String pass = "123";
+    private static String pass = "123456";
     private static String host = "localhost";
 
     static {
@@ -37,7 +37,7 @@ public class DBConnection {
             uname = prop.getProperty("dbuser");
             pass = prop.getProperty("dbpassword");
             host = prop.getProperty("host");
-            
+
         } catch (IOException ex) {
             Exp.Handle(ex);
         }
@@ -52,19 +52,18 @@ public class DBConnection {
             Logger.getLogger(DBConnection.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
     }
+
     public static synchronized Connection getConnection() throws SQLException {
 
         //MySql
-        String url = "jdbc:mysql://" + host + ":3306/" + db + "?autoReconnect=true";
-        con = DriverManager.getConnection(url, uname, pass);
-
+        if (null == con || con.isClosed()) {
+            String url = "jdbc:mysql://" + host + ":3306/" + db + "?autoReconnect=true";
+            con = DriverManager.getConnection(url, uname, pass);
+        }
         //SQL Servar
         //String url = "jdbc:sqlserver://"+host+":1433;databaseName="+db;
         //con = DriverManager.getConnection(url,uname,pass);
-
-
         return con;
     }
 }

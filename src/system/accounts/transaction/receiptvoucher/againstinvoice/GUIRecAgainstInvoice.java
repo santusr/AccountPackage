@@ -169,29 +169,29 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                 OBJInstallPay objIP = new OBJInstallPay();
                 objIP.setCreditId(cid);
                 objIP.setClearDate(core.Locals.setDateFormat(txtJVDate.getDate()));
-                
+
                 if (Double.parseDouble(tblPaySchedule.getValueAt(i, 6).toString()) == 0) {
                     objIP.setStatus("1");
                 } else if (chkStatus.isSelected()) {
                     objIP.setStatus("2");
                 } else {
                     objIP.setStatus("0");
-                } 
-                
+                }
+
                 objIP.setInvoNo(invoNo);
                 objIP.setInstallNo(tblPaySchedule.getValueAt(i, 0).toString());
                 Double totPaid = Double.parseDouble(tblPaySchedule.getValueAt(i, 7).toString()) + Double.parseDouble(tblPaySchedule.getValueAt(i, 5).toString());
                 objIP.setPayAmount(totPaid + "");
                 objIP.setBalance(tblPaySchedule.getValueAt(i, 6).toString());
                 objIP.setSPDisc(tblPaySchedule.getValueAt(i, 3).toString());
-                objIP.setID(((OBJPaymentSchedule)tblPaySchedule.getValueAt(i, 0)).getID());
-                
+                objIP.setID(((OBJPaymentSchedule) tblPaySchedule.getValueAt(i, 0)).getID());
+
                 if (!tblPaySchedule.getValueAt(i, 7).toString().equals("0.00")) {
                     objIP.setInstall("1");
                 } else {
                     objIP.setInstall("0");
                 }
-                
+
                 objIPList.add(objIP);
             }
             return true;
@@ -399,7 +399,12 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         txtTotPaied.setText("0.00");
         txtInstalAmount.setText("0.00");
 
-        txtInstalAmount.setText("0.00");
+        txtCurrentInstallment.setText("0.00");
+        txtPanalty.setText("0.00");
+        txtTotale.setText("0.00");
+        txtTotPayble.setText("0.00");
+        txtInstallment.setText("0.00");
+        
         txtdisc.setText("0.00");
         txtpayble.setText("0.00");
         txtpay.setText("0.00");
@@ -605,16 +610,18 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
     }
 
     private void loadInvoice() {
-        clrTable();
         String Cust = txtCustAccCode.getText();
-        obji = SERInvoList.getList(Cust);
-        int i = 1;
-        DefaultTableModel dt = (DefaultTableModel) tblInvoice.getModel();
-        for (OBJInvoList objq : obji) {
-            dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getPaiedAmount(), objq.getOwingAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate(), objq.getLoanNo()});
-            i++;
+        if (Cust != null && !Cust.isEmpty()) {
+            clrTable();
+            obji = SERInvoList.getList(Cust);
+            int i = 1;
+            DefaultTableModel dt = (DefaultTableModel) tblInvoice.getModel();
+            for (OBJInvoList objq : obji) {
+                dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getPaiedAmount(), objq.getOwingAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate(), objq.getLoanNo()});
+                i++;
+            }
+            calcAll();
         }
-        calcAll();
     }
 
     private void clrTable() {
@@ -623,6 +630,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         for (int i = 0; i < rc; i++) {
             df.removeRow(0);
         }
+        clearScheduleTable();
     }
 
     private void calcAll() {
@@ -651,7 +659,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         double d3;
         double d4 = 0.00;
 
-        d1 = Double.parseDouble(txtInstal.getText());
+        d1 = Double.parseDouble(txtCurrentInstallment.getText());
 
         d2 = Double.parseDouble(txtdisc.getText());
         if (!txtpay.getText().equals("")) {
@@ -665,7 +673,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         double totPayble = Double.parseDouble(txtTotPayble.getText()) - d2;
         if (totPayble <= d4) {
             chkStatus.setSelected(true);
-        } else { 
+        } else {
             chkStatus.setSelected(false);
         }
 
@@ -771,13 +779,13 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                     objsch.getBalance(),
                     Locals.currencyFormat(0.00),
                     objsch.getType()});
-                
-                if (objsch.getType().equals(SettlementType.INSTALMENT)){
+
+                if (objsch.getType().equals(SettlementType.INSTALMENT)) {
                     installment += Double.parseDouble(objsch.getBalance());
                 } else if (objsch.getType().equals(SettlementType.PANALTY)) {
                     panalty += Double.parseDouble(objsch.getBalance());
                 }
-                 totale += Double.parseDouble(objsch.getBalance());
+                totale += Double.parseDouble(objsch.getBalance());
             }
 
         }
@@ -792,11 +800,11 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         String invoiceNo = df.getValueAt(i, 1).toString();
         objIP = SERInvoList.getInstall(invoiceNo, Locals.setDateFormat(txtJVDate.getDate()));
 
-        txtInstal.setText(objIP.getTotInstallVal());
-        duedate = objIP.getDueDate();
-        cid = objIP.getCreditId();
-        invoNo = objIP.getInvoNo();
-        install = objIP.getInstallNo();
+        txtCurrentInstallment.setText(objIP == null ? "0.00" : objIP.getTotInstallVal());
+        duedate = objIP == null ? "" : objIP.getDueDate();
+        cid = objIP == null ? "" : objIP.getCreditId();
+        invoNo = objIP == null ? "" : objIP.getInvoNo();
+        install = objIP == null ? "00" : objIP.getInstallNo();
 
 // OLD PANALTY CALCUlATER
 //        try {
@@ -826,7 +834,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
 //        } catch (Exception ex) {
 //            Exp.Handle(ex);
 //        }
-        int installNo = Integer.parseInt(objIP.getInstallNo());
+        int installNo = Integer.parseInt(objIP == null ? "0" : objIP.getInstallNo());
         double Rebit = Double.parseDouble(txtdisc.getText());
         double pay = Double.parseDouble(txtpay.getText());
         double installVal = 0.00;
@@ -838,7 +846,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
             totInstallVal = totInstallVal + Double.parseDouble(obj.getBalance());
         }
 
-        double installAmount = Double.parseDouble(objIP.getTotInstallVal());
+        double installAmount = Double.parseDouble(objIP == null ? "0.00" : objIP.getTotInstallVal());
         double balance = 0.00;
         if (installNo > 1) {
             int in = installNo;
@@ -847,14 +855,14 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
             //dbal = Double.parseDouble(balan);
         }
 
-        txtInstal.setText(Locals.currencyFormat(installVal));
+        txtCurrentInstallment.setText(Locals.currencyFormat(installVal));
         txtpayble.setText(Locals.currencyFormat(installVal - Rebit));
         txtbal.setText(Locals.currencyFormat((installVal - Rebit) - pay));
         txtTotPayble.setText(Locals.currencyFormat((totInstallVal - Rebit) - pay));
 //        txtTotPayble.setText(df.getValueAt(i, 6).toString());
-        if (!objIP.getStatus().equals("10")) {
+        if (objIP != null && !objIP.getStatus().equals("10")) {
 
-            if (installNo <= Integer.parseInt(objIP.getInstall())) {
+            if (installNo <= Integer.parseInt(objIP == null ? "0.00" : objIP.getInstall())) {
                 datNextPayDate.setDate(Locals.toDate(SERCommen.getDescription("payschedule", installNo + "", "invoNo = '" + objIP.getInvoNo() + "' AND CreditId = '" + objIP.getCreditId() + "' AND InstallNo", "DueDate")));
                 txtsp.setText("");
             }
@@ -1023,7 +1031,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         txtTotPaied = new javax.swing.JFormattedTextField();
         txtTotInvoBalance = new javax.swing.JFormattedTextField();
         txtInstalAmount = new javax.swing.JFormattedTextField();
-        txtInstal = new javax.swing.JFormattedTextField();
+        txtCurrentInstallment = new javax.swing.JFormattedTextField();
         jLabel15 = new javax.swing.JLabel();
         txtpayble = new javax.swing.JFormattedTextField();
         jLabel18 = new javax.swing.JLabel();
@@ -1396,13 +1404,13 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
         jLayeredPane1.add(txtInstalAmount);
         txtInstalAmount.setBounds(490, 0, 80, 20);
 
-        txtInstal.setEditable(false);
-        txtInstal.setBackground(new java.awt.Color(204, 204, 255));
-        txtInstal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        txtInstal.setForeground(new java.awt.Color(153, 0, 0));
-        txtInstal.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
-        txtInstal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtInstal.setText("0.00");
+        txtCurrentInstallment.setEditable(false);
+        txtCurrentInstallment.setBackground(new java.awt.Color(204, 204, 255));
+        txtCurrentInstallment.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        txtCurrentInstallment.setForeground(new java.awt.Color(153, 0, 0));
+        txtCurrentInstallment.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0.00"))));
+        txtCurrentInstallment.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtCurrentInstallment.setText("0.00");
 
         jLabel15.setBackground(new java.awt.Color(238, 238, 228));
         jLabel15.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -1741,7 +1749,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                         .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtInstal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(txtCurrentInstallment, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addGap(18, 18, 18)
@@ -1768,10 +1776,10 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                         .addComponent(jLabel6)
                         .addGap(8, 8, 8)
                         .addComponent(txtAccountant, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtApproved, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtApproved, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLayeredPane5, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -1806,13 +1814,13 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 21, Short.MAX_VALUE)
                         .addComponent(jLayeredPane3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jCheckBox2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1830,7 +1838,7 @@ public class GUIRecAgainstInvoice extends javax.swing.JInternalFrame {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtInstal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCurrentInstallment, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtTotPayble, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1930,6 +1938,7 @@ private void cmdPrintChqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
 
     private void cmdCustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCustActionPerformed
         loadCustomer();
+        loadInvoice();
     }//GEN-LAST:event_cmdCustActionPerformed
 
     private void tblInvoiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInvoiceMouseClicked
@@ -2105,9 +2114,9 @@ private void cmdPrintChqActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JTextField txtApproved;
     private javax.swing.JTextField txtCostCenter;
     private javax.swing.JTextField txtCostCode;
+    private javax.swing.JFormattedTextField txtCurrentInstallment;
     private javax.swing.JTextField txtCustAccCode;
     private javax.swing.JTextField txtDocumentNo;
-    private javax.swing.JFormattedTextField txtInstal;
     private javax.swing.JFormattedTextField txtInstalAmount;
     private javax.swing.JFormattedTextField txtInstallment;
     private com.toedter.calendar.JDateChooser txtJVDate;

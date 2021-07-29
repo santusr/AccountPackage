@@ -402,7 +402,7 @@
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="jLabel15" min="-2" pref="141" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="txtInstal" min="-2" pref="90" max="-2" attributes="0"/>
+                                              <Component id="txtCurrentInstallment" min="-2" pref="90" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                   </Group>
@@ -439,10 +439,10 @@
                               <Component id="jLabel6" min="-2" max="-2" attributes="2"/>
                               <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                               <Component id="txtAccountant" min="-2" pref="263" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-                              <Component id="jLabel7" max="32767" attributes="2"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtApproved" min="-2" pref="197" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="jLabel7" min="-2" pref="87" max="-2" attributes="2"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="txtApproved" min="-2" pref="329" max="-2" attributes="0"/>
                           </Group>
                           <Component id="jLayeredPane5" alignment="1" max="32767" attributes="0"/>
                       </Group>
@@ -489,14 +489,14 @@
                           </Group>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="109" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="111" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="jLayeredPane1" min="-2" pref="21" max="-2" attributes="0"/>
                           <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane2" pref="109" max="32767" attributes="0"/>
+                      <Component id="jScrollPane2" pref="111" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Component id="jLayeredPane5" min="-2" pref="21" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -517,7 +517,7 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel15" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
-                                  <Component id="txtInstal" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Component id="txtCurrentInstallment" min="-2" pref="20" max="-2" attributes="0"/>
                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                       <Component id="jLabel23" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
                                       <Component id="txtTotPayble" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
@@ -1014,7 +1014,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JFormattedTextField" name="txtInstal">
+            <Component class="javax.swing.JFormattedTextField" name="txtCurrentInstallment">
               <Properties>
                 <Property name="editable" type="boolean" value="false"/>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

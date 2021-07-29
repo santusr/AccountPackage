@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REPInvoice" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="539" leftMargin="36" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ac36a522-1ad1-4552-92d3-cc29b5366cc5">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.x" value="70"/>
+	<property name="ireport.y" value="171"/>
 	<style name="Crosstab Data Text" hAlign="Center"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
@@ -10,36 +10,36 @@
 	<parameter name="invoNo" class="java.lang.String"/>
 	<parameter name="t_name" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * FROM Transferheader, store  WHERE Transno = $P{invoNo} AND storecodeF = store.storecode]]>
+		<![CDATA[SELECT * FROM stockadjestmentheader, store  WHERE adjNo = $P{invoNo} AND store = store.storecode]]>
 	</queryString>
-	<field name="TransNo" class="java.lang.String">
+	<field name="adjNo" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="TransDate" class="java.sql.Date">
+	<field name="store" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="StoreCodeF" class="java.lang.String">
+	<field name="adjDate" class="java.sql.Date">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="StoreCodeT" class="java.lang.String">
+	<field name="systemValue" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="PreparedBy" class="java.lang.String">
+	<field name="manualValue" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="ApprovedBy" class="java.lang.String">
+	<field name="prepBy" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="Remark" class="java.lang.String">
+	<field name="AppBy" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="NetAmount" class="java.math.BigDecimal">
+	<field name="remarks" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="UserId" class="java.lang.String">
+	<field name="user" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="Status" class="java.lang.String">
+	<field name="status" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="StoreCode" class="java.lang.String">
@@ -57,7 +57,7 @@
 	<title>
 		<band height="71" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="c280a404-1899-4e1a-9b44-58593de1ac5b" x="1" y="1" width="538" height="70"/>
+				<reportElement x="1" y="1" width="538" height="70" uuid="c280a404-1899-4e1a-9b44-58593de1ac5b"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Header.jasper"]]></subreportExpression>
 			</subreport>
@@ -66,60 +66,60 @@
 	<pageHeader>
 		<band height="84" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="034044dd-c74e-48e7-9a2e-351581116b5d" x="1" y="11" width="513" height="25"/>
+				<reportElement x="1" y="11" width="513" height="25" uuid="034044dd-c74e-48e7-9a2e-351581116b5d"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Verdana" size="10" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Store Transfer Report]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="797b3f3d-da0c-4645-8db4-7cb866623476" x="2" y="62" width="77" height="16"/>
+				<reportElement x="2" y="62" width="77" height="16" uuid="797b3f3d-da0c-4645-8db4-7cb866623476"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Transfer No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5d607fc6-5bea-4752-a523-7510501877cb" x="356" y="61" width="87" height="16"/>
+				<reportElement x="356" y="61" width="87" height="16" uuid="5d607fc6-5bea-4752-a523-7510501877cb"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Transfer Date.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="52f70489-e12e-4d75-bc52-065d913506ce" x="356" y="43" width="77" height="16"/>
+				<reportElement x="356" y="43" width="77" height="16" uuid="52f70489-e12e-4d75-bc52-065d913506ce"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Store Keeper]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="164727a3-32d0-4b37-af4a-32b64c685fd5" x="102" y="62" width="100" height="16"/>
+				<reportElement x="102" y="62" width="100" height="16" uuid="164727a3-32d0-4b37-af4a-32b64c685fd5"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TransNo}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{adjNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a7a069be-5663-469b-bad4-2614089d3ef0" x="2" y="43" width="341" height="16"/>
+				<reportElement x="2" y="43" width="341" height="16" uuid="a7a069be-5663-469b-bad4-2614089d3ef0"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="9"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Transfer From " + $F{Name} + " To " + $F{StoreCodeT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Transfer From " + $F{Name} + " To " + $F{StoreCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="58484477-fb65-498e-bc3c-b15e48e7aeb7" x="443" y="43" width="105" height="16"/>
+				<reportElement x="443" y="43" width="105" height="16" uuid="58484477-fb65-498e-bc3c-b15e48e7aeb7"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{UserId}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{user}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="cda42ed8-6dea-4010-a111-9f45b42d46fc" x="446" y="61" width="102" height="16"/>
+				<reportElement x="446" y="61" width="102" height="16" uuid="cda42ed8-6dea-4010-a111-9f45b42d46fc"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{TransDate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{adjDate}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -129,9 +129,9 @@
 	<detail>
 		<band height="25" splitType="Stretch">
 			<subreport>
-				<reportElement uuid="3cdf7af8-bc51-4bc7-9da6-67f7e3f11b0c" x="1" y="0" width="538" height="25"/>
+				<reportElement x="1" y="0" width="538" height="25" uuid="3cdf7af8-bc51-4bc7-9da6-67f7e3f11b0c"/>
 				<subreportParameter name="invoNo">
-					<subreportParameterExpression><![CDATA[$F{TransNo}]]></subreportParameterExpression>
+					<subreportParameterExpression><![CDATA[$F{adjNo}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "TransferSub.jasper"]]></subreportExpression>
@@ -147,63 +147,55 @@
 	<summary>
 		<band height="152" splitType="Stretch">
 			<line>
-				<reportElement uuid="2785b714-0484-494b-b32e-81d79d6deca6" x="2" y="0" width="538" height="1"/>
+				<reportElement x="2" y="0" width="538" height="1" uuid="2785b714-0484-494b-b32e-81d79d6deca6"/>
 			</line>
 			<staticText>
-				<reportElement uuid="9bca683e-1d97-4070-8e61-fcd2f09e83cd" x="346" y="7" width="69" height="20"/>
+				<reportElement x="346" y="7" width="69" height="20" uuid="9bca683e-1d97-4070-8e61-fcd2f09e83cd"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Verdana" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[NetAmount]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="bc0f6380-8f0f-43d5-8e12-268c23e8d0d4" x="405" y="6" width="87" height="1"/>
+				<reportElement x="405" y="6" width="87" height="1" uuid="bc0f6380-8f0f-43d5-8e12-268c23e8d0d4"/>
 			</line>
 			<line>
-				<reportElement uuid="b31e66a6-30df-4f0c-95ca-e8647a2e76d1" x="405" y="25" width="87" height="1"/>
+				<reportElement x="405" y="25" width="87" height="1" uuid="b31e66a6-30df-4f0c-95ca-e8647a2e76d1"/>
 				<graphicElement>
 					<pen lineWidth="2.0" lineStyle="Double"/>
 				</graphicElement>
 			</line>
 			<textField>
-				<reportElement uuid="23b9d446-6080-473f-aa92-a181a52f94ce" x="327" y="72" width="187" height="20"/>
+				<reportElement x="327" y="72" width="187" height="20" uuid="23b9d446-6080-473f-aa92-a181a52f94ce"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Verdana" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Approved By ( "+$F{ApprovedBy}+" )"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Approved By ( "+$F{AppBy}+" )"]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement uuid="a90dbf37-d0b7-4e1f-a9ae-c937cd6ff72a" x="4" y="119" width="535" height="29"/>
+				<reportElement x="4" y="119" width="535" height="29" uuid="a90dbf37-d0b7-4e1f-a9ae-c937cd6ff72a"/>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Footer.jasper"]]></subreportExpression>
 			</subreport>
 			<textField>
-				<reportElement uuid="af7f49a7-5cb4-4413-98cd-646cb2225187" x="16" y="73" width="229" height="20"/>
+				<reportElement x="16" y="73" width="229" height="20" uuid="af7f49a7-5cb4-4413-98cd-646cb2225187"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Verdana" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Prepared By ( "+$F{PreparedBy}+" )"]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Prepared By ( "+$F{prepBy}+" )"]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="5df24c21-2c85-43e3-a03a-780f759278b2" x="38" y="71" width="179" height="1"/>
+				<reportElement x="38" y="71" width="179" height="1" uuid="5df24c21-2c85-43e3-a03a-780f759278b2"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
 			<line>
-				<reportElement uuid="99f475e0-d3a8-4f0b-b7d1-6aed13180200" x="343" y="71" width="156" height="1"/>
+				<reportElement x="343" y="71" width="156" height="1" uuid="99f475e0-d3a8-4f0b-b7d1-6aed13180200"/>
 				<graphicElement>
 					<pen lineStyle="Dotted"/>
 				</graphicElement>
 			</line>
-			<textField pattern="#0.00">
-				<reportElement uuid="59110bd2-5a70-4d52-9866-a66c59fb3e1e" x="407" y="8" width="85" height="16"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Verdana" size="8" isBold="true"/>
-					<paragraph rightIndent="3"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{NetAmount}]]></textFieldExpression>
-			</textField>
 		</band>
 	</summary>
 </jasperReport>

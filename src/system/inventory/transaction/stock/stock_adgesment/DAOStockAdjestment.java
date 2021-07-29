@@ -22,14 +22,13 @@ public class DAOStockAdjestment {
     private static final String TABALHISTORY = "StockAdjestmentHistory";
 
     static void save(OBJAdjestment obj, Connection conn, int Act) throws SQLException {
-        if (Act != 1) {
-            String sql = "delete  from stockadjestmentheader where stockadjestmentheader.adjNo = '" + obj.getAdjNo() + "'";
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.execute();
 
-        }
-        String sql = "INSERT INTO " + TABAL + " ( adjNo, Store, AdjDate, systemValue, manualValue, PrepBy, AppBy, Remarks, User) VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "delete  from stockadjestmentheader where stockadjestmentheader.adjNo = '" + obj.getAdjNo() + "'";
         PreparedStatement st = conn.prepareStatement(sql);
+        st.execute();
+
+        sql = "INSERT INTO " + TABAL + " ( adjNo, Store, AdjDate, systemValue, manualValue, PrepBy, AppBy, Remarks, User, status) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        st = conn.prepareStatement(sql);
         st.setString(1, obj.getAdjNo());
         st.setString(2, obj.getStore());
         st.setString(3, obj.getDate());
@@ -39,6 +38,7 @@ public class DAOStockAdjestment {
         st.setString(7, obj.getAppBy());
         st.setString(8, obj.getRemarks());
         st.setString(9, obj.getUser());
+        st.setString(10, obj.getStatus());
         st.execute();
 
 //        } else {
@@ -65,43 +65,45 @@ public class DAOStockAdjestment {
         ArrayList<OBJAdjestmentHistory> adjestmentHistorys = obja.getAjestmentHistorys();
 
         for (OBJAdjestmentHistory obj : adjestmentHistorys) {
-            double def = 0;
-            if(Act != 1){
-               def = getDefarence(obj, conn);
-            }
+
             
-            
-            String sql = "UPDATE `stock` SET `StockInHand` = '" + Double.parseDouble(obj.getManualStock()) + "' WHERE `ItemCode` = '" + obj.getItemCode() + "' AND `Store` = '" + obja.getStore() + "'";
-            PreparedStatement st = conn.prepareStatement(sql);
-            st.execute();
 
-            sql = "UPDATE `itemmaster` SET `StockInHand` =  `StockInHand` + '" + (Double.parseDouble(obj.getDeference()) - def) + "' WHERE `ItemCode` = '" + obj.getItemCode() + "'";
-            st = conn.prepareStatement(sql);
-            st.execute();
+                String sql = "";
+                PreparedStatement st;
+                if (obja.getStatus().equals("1")) {
+                    sql = "UPDATE `stock` SET `StockInHand` = `StockInHand` + '" + (Double.parseDouble(obj.getDeference())) + "' WHERE `ItemCode` = '" + obj.getItemCode() + "' AND `Store` = '" + obja.getStore() + "'";
+                    st = conn.prepareStatement(sql);
+                    st.execute();
 
-            sql = "delete  from stockadjestmenthistory where stockadjestmenthistory.adjNo = '" + obj.getAdjNo() + "' and stockadjestmenthistory.itemCode = '"+obj.getItemCode()+"'";
-            st = conn.prepareStatement(sql);
-            st.execute();
+                    sql = "UPDATE `itemmaster` SET `StockInHand` =  `StockInHand` + '" + (Double.parseDouble(obj.getDeference())) + "' WHERE `ItemCode` = '" + obj.getItemCode() + "'";
+                    st = conn.prepareStatement(sql);
+                    st.execute();
 
-            sql = "INSERT INTO " + TABALHISTORY + " ( AdjNo, ItemCode, Description, systemStock, manualStock, deference, systemValue, manualValue) VALUES (?,?,?,?,?,?,?,?)";
-            st = conn.prepareStatement(sql);
-            st.setString(1, obj.getAdjNo());
-            st.setString(2, obj.getItemCode());
-            st.setString(3, obj.getDescription());
-            st.setString(4, obj.getSystemStock());
-            st.setString(5, obj.getManualStock());
-            st.setString(6, obj.getDeference());
-            st.setString(7, obj.getSystemValue());
-            st.setString(8, obj.getManualValue());
-            st.execute();
+                }
+//if (Double.parseDouble(obj.getManualStock()) != Double.parseDouble(obj.getSystemStock())) {
+                sql = "delete  from stockadjestmenthistory where stockadjestmenthistory.adjNo = '" + obj.getAdjNo() + "' and stockadjestmenthistory.itemCode = '" + obj.getItemCode() + "'";
+                st = conn.prepareStatement(sql);
+                st.execute();
 
-            st.close();
+                sql = "INSERT INTO " + TABALHISTORY + " ( AdjNo, ItemCode, Description, systemStock, manualStock, deference, systemValue, manualValue) VALUES (?,?,?,?,?,?,?,?)";
+                st = conn.prepareStatement(sql);
+                st.setString(1, obj.getAdjNo());
+                st.setString(2, obj.getItemCode());
+                st.setString(3, obj.getDescription());
+                st.setString(4, obj.getSystemStock());
+                st.setString(5, obj.getManualStock());
+                st.setString(6, obj.getDeference());
+                st.setString(7, obj.getSystemValue());
+                st.setString(8, obj.getManualValue());
+                st.execute();
+
+                st.close();
         }
     }
 
     private static double getDefarence(OBJAdjestmentHistory obj, Connection conn) throws SQLException {
         double def = 0;
-        String sql = "SELECT deference As val FROM " + TABALHISTORY + " WHERE adjNo = '"+obj.getAdjNo()+"' and itemCode = '"+obj.getItemCode()+"'";
+        String sql = "SELECT deference As val FROM " + TABALHISTORY + " WHERE adjNo = '" + obj.getAdjNo() + "' and itemCode = '" + obj.getItemCode() + "'";
 
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();
@@ -137,6 +139,7 @@ public class DAOStockAdjestment {
                     result.getString(7),
                     result.getString(8),
                     result.getString(9),
+                    result.getString(10),
                     null);
         }
 
@@ -162,6 +165,7 @@ public class DAOStockAdjestment {
                     result.getString(7),
                     result.getString(8),
                     result.getString(9),
+                    result.getString(10),
                     null);
         }
 
@@ -186,7 +190,8 @@ public class DAOStockAdjestment {
                     result.getString(6),
                     result.getString(7),
                     result.getString(8),
-                    result.getString(9));
+                    result.getString(9),
+                    result.getString(11));
             obja.add(obj);
         }
 
@@ -344,23 +349,45 @@ public class DAOStockAdjestment {
     static ArrayList<OBJAdjestmentHistory> loadTable(Connection conn, String code) throws SQLException {
         ArrayList<OBJAdjestmentHistory> obja = new ArrayList<>();
         OBJAdjestmentHistory obj = null;
-        String sql = "select itemmaster.ItemCode, itemmaster.Description, stock.StockInHand, stock.SellingRate from itemmaster \n"
-                + "	left join stock on stock.ItemCode = itemmaster.ItemCode\n"
-                + "where stock.store = '" + code + "'";
+
+        String sql = "select store, adjNo from stockadjestmentheader where status = 0";
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();
         ResultSet result = st.getResultSet();
+        if (result.next()) {
+            String store = result.getString(1);
+            String adjNo = result.getString(2);
+            sql = "select stockadjestmenthistory.adjNo, "
+                    + "stockadjestmenthistory.ItemCode, "
+                    + "stockadjestmenthistory.description, "
+                    + "stockadjestmenthistory.systemStock , "
+                    + "stockadjestmenthistory.manualStock , "
+                    + "stockadjestmenthistory.deference , "
+                    + "(stockadjestmenthistory.systemValue/systemStock) as systemValue, "
+                    + "(stockadjestmenthistory.manualValue/manualStock) as manualValue, "
+                    + "'" + store + "' "
+                    + "from stockadjestmenthistory "
+                    + "where stockadjestmenthistory.adjNo = '" + adjNo + "'";
+        } else {
+            sql = "select 0, itemmaster.ItemCode, itemmaster.ShortName, stock.StockInHand, stock.StockInHand, 0, stock.SalsePrice, stock.SalsePrice, stock.store from itemmaster \n"
+                    + "	left join stock on stock.ItemCode = itemmaster.ItemCode\n"
+                    + "where stock.store = '" + code + "'";
+        }
+        st = conn.prepareStatement(sql);
+        st.execute();
+        result = st.getResultSet();
         while (result.next()) {
 
             obj = new OBJAdjestmentHistory(
-                    result.getString(2),
                     result.getString(1),
                     result.getString(2),
                     result.getString(3),
-                    result.getString(3),
-                    "0",
-                    (result.getDouble(4) * result.getDouble(3)) + "",
-                    (result.getDouble(4) * result.getDouble(3)) + "");
+                    result.getString(4),
+                    result.getString(5),
+                    result.getString(6),
+                    result.getDouble(7) + "",
+                    result.getDouble(8) + "",
+                    result.getString(9));
             obja.add(obj);
         }
 

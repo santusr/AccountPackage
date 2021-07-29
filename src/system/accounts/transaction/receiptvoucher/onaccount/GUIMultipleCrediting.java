@@ -38,12 +38,12 @@ import system.accounts.transaction.receiptvoucher.againstinvoice.SERVouch;
  *
  * @author dell
  */
-public class GUIMultipleDebiting extends javax.swing.JPanel {
+public class GUIMultipleCrediting extends javax.swing.JPanel {
 
     /**
      * Creates new form GUIMultipliDebiting
      */
-    public GUIMultipleDebiting() {
+    public GUIMultipleCrediting() {
         initComponents();
         initOthers();
     }

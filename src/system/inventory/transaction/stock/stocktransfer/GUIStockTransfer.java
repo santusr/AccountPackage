@@ -101,17 +101,17 @@ public class GUIStockTransfer extends javax.swing.JInternalFrame {
                 accountTranses = null;
                 try {
                     b = SERStockTransfer.save(obj, obja, transaction, payment, paymentsInfo, accountTranses, itemTransactions, Act);
-                if (jCheckBox2.isSelected() && b) {
-                    printTrans();
-                }
+                    if (jCheckBox2.isSelected() && b) {
+                        printTrans();
+                    }
 
-                doNew();
-                if (Act == 1) {
-                    setMode(DEFAULT_STATUS);
-                } else {
-                    setMode(NEW_STATUS);
-                    Act = 1;
-                }
+                    doNew();
+                    if (Act == 1) {
+                        setMode(DEFAULT_STATUS);
+                    } else {
+                        setMode(NEW_STATUS);
+                        Act = 1;
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(GUIStockTransfer.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -306,9 +306,15 @@ public class GUIStockTransfer extends javax.swing.JInternalFrame {
 
     private void getNavi() {
         obj = SERStockTransfer.getNavi(Index);
-        obja = SERStockTransfer.InvoHistory(obj.getTransNo());
-        setContent(obj);
-        setContentHistory(obja);
+        if (null != obj) {
+            obja = SERStockTransfer.InvoHistory(obj.getTransNo());
+            setContent(obj);
+            setContentHistory(obja);
+        } else {
+            Act = 1;
+            doNew();
+            JOptionPane.showMessageDialog(this, "No recordes found for view");
+        }
     }
 
     private void setContent(OBJStockTransfer obj) {
@@ -398,14 +404,16 @@ public class GUIStockTransfer extends javax.swing.JInternalFrame {
         if (b) {
 
             obj = SERStockTransfer.getTablInfo(itc, txtStoreCodeF.getText());
-            df.setValueAt(obj.getName(), i, 2);
-            df.setValueAt(obj.getUnit(), i, 3);
-            df.setValueAt("0", i, 4);
-            df.setValueAt(obj.getWar(), i, 5);
-            df.setValueAt(Locals.sCurrencyFormat(obj.getSellingRate()), i, 6);
-            df.setValueAt("0.00", i, 7);
-            df.setValueAt("0.00", i, 8);
-            costs.add(obj.getCostRate());
+            if (null != obj) {
+                df.setValueAt(obj.getName(), i, 2);
+                df.setValueAt(obj.getUnit(), i, 3);
+                df.setValueAt("0", i, 4);
+                df.setValueAt(obj.getWar(), i, 5);
+                df.setValueAt(Locals.sCurrencyFormat(obj.getSellingRate()), i, 6);
+                df.setValueAt("0.00", i, 7);
+                df.setValueAt("0.00", i, 8);
+                costs.add(obj.getCostRate());
+            }
             //String name = SERCommen.getDescription( "ItemMaster", itc, "ItemCode", "ShortName");
             // String unit = SERCommen.getDescription( "ItemMaster", itc, "ItemCode", "UnitCode");
             // Double minlev = Double.parseDouble(SERCommen.getDescription( "ItemMaster", itc, "ItemCode", "MinLevel"));

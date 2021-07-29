@@ -16,6 +16,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -33,8 +35,8 @@ public class SERItemMaster {
             ArrayList<OBJAccountTrans> accountTranses,
             ArrayList<OBJItemTransaction> itemTransactions,
             int Act) {
-        try {
             Connection conn = accountpackage.AccountPackage.connect();
+        try {
             conn.setAutoCommit(false);
             DAOItemMaster.save(obj, conn, Act);
             if(Act == 1){
@@ -44,6 +46,11 @@ public class SERItemMaster {
             conn.commit();
             return true;
         } catch (SQLException ex) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex1) {
+                    Logger.getLogger(SERItemMaster.class.getName()).log(Level.SEVERE, null, ex1);
+                }
             if (ex.getErrorCode() == 1062) {
                 JOptionPane.showMessageDialog(null, "Duplicate Code is not allowed", "Warning", JOptionPane.ERROR_MESSAGE);
             } else {

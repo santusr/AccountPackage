@@ -2634,18 +2634,12 @@ private void mnuChequestobeRealisedClearedActionPerformed(java.awt.event.ActionE
 
 private void mnuListofBouncedChequesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuListofBouncedChequesActionPerformed
     GUIBouncedCheques fc = new GUIBouncedCheques();
-    SwingUtilities.updateComponentTreeUI(fc);
-    fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-    jDesktopPane1.add(fc);
-    fc.setVisible(true);
+    loadUi(fc);
 }//GEN-LAST:event_mnuListofBouncedChequesActionPerformed
 
 private void mnuChequesRealisedClearedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuChequesRealisedClearedActionPerformed
     GUIChequesRealised fc = new GUIChequesRealised();
-    SwingUtilities.updateComponentTreeUI(fc);
-    fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-    jDesktopPane1.add(fc);
-    fc.setVisible(true);
+    loadUi(fc);
 }//GEN-LAST:event_mnuChequesRealisedClearedActionPerformed
 
 private void mnuStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuStoreActionPerformed
@@ -3472,7 +3466,7 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     private void salesMenu(MouseEvent evt) {
         pm.removeAll();
         pm.add(mnuSalesQuotation1);
-        pm.add(mnuDeliveryOrderNote1);
+        pm.add(mnuDeliveryOrderNote1);  
         pm.add(mnuSalesInvoiceAgainstDO1);
         pm.add(mnuSalesInvoice1);
         pm.add(mnuSalesInvoiceService1);
@@ -3498,16 +3492,12 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
 
     private void loadPayVoucherOA() {
         GUIPayOnAccount fc = new GUIPayOnAccount();
-        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-        jDesktopPane1.add(fc);
-        fc.setVisible(true);
+        loadUi(fc);
     }
 
     private void loadPayAgI() {
         GUIPayAgainstInvoice fc = new GUIPayAgainstInvoice();
-        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-        jDesktopPane1.add(fc);
-        fc.setVisible(true);
+        loadUi(fc);
     }
 
     private void loadRecVoucherOA() {
@@ -3855,35 +3845,44 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
             public void run() {
                 while (true) {
                     try {
-                        if (f == 1) {
-                            loadCustomer(val);
-                            val = "";
-                            f = 0;
-                        } else if (f == 2) {
-                            loadSalesInvoiceDOS(val);
-                            val = "";
-                            f = 0;
-                        } else if (f == 3) {
-                            loadDepo();
-                            val = "";
-                            f = 0;
-                        } else if (f == 4) {
-                            loadSalesInvoiceDOS(val, "invoNo");
-                            val = "";
-                            f = 0;
-                        } else if (f == 5) {
-                            loadRecAgI(val);
-                            val = "";
-                            f = 0;
-                        } else if (f == 6) {
-                            repCustomerInvoiceDet();
-                            val = "";
-                            f = 0;
-                        } else if (f == 7) {
-                            loadPurches(val);
-                            val = "";
-                            f = 0;
+                        switch (f) {
+                            case 1:
+                                loadCustomer(val);
+                                val = "";
+                                f = 0;
+                                break;
+                            case 2:
+                                loadSalesInvoiceDOS(val);
+                                val = "";
+                                f = 0;
+                                break;
+                            case 3:
+                                loadDepo();
+                                val = "";
+                                f = 0;
+                                break;
+                            case 4:
+                                loadSalesInvoiceDOS(val, "invoNo");
+                                val = "";
+                                f = 0;
+                                break;
+                            case 5:
+                                loadRecAgI(val);
+                                val = "";
+                                f = 0;
+                                break;
+                            case 6:
+                                repCustomerInvoiceDet();
+                                val = "";
+                                f = 0;
+                                break;
+                            case 7:
+                                loadPurches(val);
+                                val = "";
+                                f = 0;
+                                break;
                         }
+
                     } catch (Exception ex) {
                         Exp.Handle(ex);
                     }
@@ -3900,23 +3899,17 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     // <editor-fold defaultstate="collapsed" desc="SP Report">    
     private void repPaymentHistory() {
         GUICustomerOnlyReport fc = new GUICustomerOnlyReport("REPCustomerHistory.jasper", "Collection Det Report");
-        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-        jDesktopPane1.add(fc);
-        fc.setVisible(true);
+        loadUi(fc);
     }
 
     private void repItemFlow() {
         GUIItemFlow fc = new GUIItemFlow();
-        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-        jDesktopPane1.add(fc);
-        fc.setVisible(true);
+        loadUi(fc);
     }
 
     private void repCollectionDet() {
         GUIComenReport fc = new GUIComenReport("REPCollectionDet.jasper", "Collection Det Report");
-        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
-        jDesktopPane1.add(fc);
-        fc.setVisible(true);
+        loadUi(fc);
     }
 
     private void repCollectionSum() {
@@ -3946,7 +3939,7 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         jDesktopPane1.add(fc);
         fc.setVisible(true);
     }
-    
+
     private void repSalesReturnReport() {
         GUIComenReport fc = new GUIComenReport("REPSalesReturnHistory.jasper", "Sales Return Report");
         fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
@@ -3967,7 +3960,7 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         jDesktopPane1.add(fc);
         fc.setVisible(true);
     }
-    
+
     private void repSalesSummerySrepCC() {
         GUIComenReport fc = new GUIComenReport("REPSalesCCWise.jasper", "Sales Summery (Sales rep & Cost Center wise) Report");
         fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
@@ -3981,7 +3974,7 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
         jDesktopPane1.add(fc);
         fc.setVisible(true);
     }
-    
+
     private void repSalesAnalysis() {
         GUIComenReport fc = new GUIComenReport("REPSalesAnalysis.jasper", "Sales Analysis Report");
         fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
@@ -3990,4 +3983,11 @@ private void mnuPriceListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-
     }
 
     //</editor-fold>
+    private void loadUi(JInternalFrame fc) {
+        SwingUtilities.updateComponentTreeUI(fc);
+        fc.setBounds(jDesktopPane1.getWidth() / 2 - fc.getWidth() / 2, jDesktopPane1.getHeight() / 2 - fc.getHeight() / 2, fc.getWidth(), fc.getHeight());
+        jDesktopPane1.add(fc);
+        fc.setVisible(true);
+
+    }
 }

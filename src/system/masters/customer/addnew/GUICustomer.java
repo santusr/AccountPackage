@@ -50,7 +50,7 @@ public class GUICustomer extends javax.swing.JInternalFrame {
         Srep = Srep.substring(1, 3);
 
         cusGroup = txtCusGroup.getSelectedItem().toString();
-        cusGroup = cusGroup.substring(1, 5);
+        cusGroup = cusGroup.length() > 5 ? cusGroup.substring(1, 5) : cusGroup;
 
         FCurrency = txtCurrency.getSelectedItem().toString();
         FCurrency = FCurrency.substring(1, 4);

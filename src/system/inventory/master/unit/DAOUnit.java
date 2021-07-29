@@ -43,7 +43,7 @@ public class DAOUnit {
         
         //MySql
         //Ix -= 1;
-        String sql = "SELECT * FROM "+TABAL+" ORDER BY WHERE Status = '0' UOMCode ASC LIMIT "+Ix+",1";
+        String sql = "SELECT * FROM "+TABAL+" WHERE Status = '0' ORDER BY UOMCode ASC LIMIT "+Ix+",1";
         PreparedStatement st = conn.prepareStatement(sql);
         st.execute();
         ResultSet result = st.getResultSet();

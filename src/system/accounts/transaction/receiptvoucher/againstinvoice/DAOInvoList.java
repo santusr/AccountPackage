@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * @author Rabid
  */
 public class DAOInvoList {
-    
+
     static ArrayList<OBJInvoList> getList(String Cust, Connection con) throws SQLException {
         ArrayList<OBJInvoList> il = new ArrayList<OBJInvoList>();
         OBJInvoList obj = null;
@@ -42,7 +42,7 @@ public class DAOInvoList {
                 + "WHERE "
                 + "             credit.CustCode = '" + Cust + "' AND "
                 + "             invoiceheader.InvoNo = credit.InvoNo AND "
-                + "             Credit.Status in ('0', '1')";
+                + "             Credit.Status in ('0')";
         PreparedStatement st = con.prepareStatement(sql);
         st.execute();
         ResultSet result = st.getResultSet();
@@ -53,7 +53,7 @@ public class DAOInvoList {
             d1 = Double.parseDouble(result.getString("TotInterest"));
             d2 = Double.parseDouble(result.getString("LateCharge"));
             d3 = Double.parseDouble(result.getString("SPDisc"));
-            
+
             d0 = d0 + d1 + d2 - d3;
             tot = Locals.currencyFormat(d0);
             obj = new OBJInvoList(
@@ -71,7 +71,7 @@ public class DAOInvoList {
         }
         return il;
     }
-    
+
     static OBJInstallPay getInstall(String invoNo, String jvDate, Connection con) throws SQLException {
         OBJInstallPay obj = null;
 //        String sql = "SELECT * FROM payschedule WHERE invoNo = '"+invoNo+"' AND status = '0' AND DueDate <= jvDate ORDER BY InstallNo ASC LIMIT 1";
@@ -96,7 +96,7 @@ public class DAOInvoList {
                     result.getString(12),
                     result.getString(14),
                     result.getString(13));
-            
+
         } else {
             sql = "SELECT * FROM payschedule WHERE invoNo = '" + invoNo + "' AND DueDate > CURRENT_TIMESTAMP AND status = '0' ORDER BY InstallNo ASC LIMIT 1";
             st = con.prepareStatement(sql);
@@ -120,35 +120,35 @@ public class DAOInvoList {
                         result.getString(12),
                         result.getString(14),
                         result.getString(13));
-                
+
             }
         }
         return obj;
     }
-    
+
     static void UpdateCr(OBJInstallPay objIP, String nextPay, Connection conn) throws SQLException {
 //        String sql = "UPDATE credit SET TotPayble = ?, TotPay = ?, PDate = ?, status = ?, SPDisc = ? WHERE CreditId = '" + objIP.getCreditId()+ "'";
         PreparedStatement st;
         String sql;
-        
+
         sql = "UPDATE credit SET TotPayble = ((TotPayble - ?) - ?), TotPay = TotPay + ?, PDate = ?, SPDisc = SPDisc + ?, status = ? WHERE CreditId = '" + objIP.getCreditId() + "'";
         //clarDate = ?, status = ?, LatePay = ?, TotInstallVal = ?, PayAmount = ?, Balance = ?, SPDate = ? WHERE CreditId = '" + objIP.getCreditId()+ " AND '";
         st = conn.prepareStatement(sql);
 
         //int ii = Integer.parseInt(objIP.getInstallNo()) + 1;
         String SPdate = nextPay;
-        
+
         st.setDouble(1, Double.parseDouble(objIP.getPayAmount()));
         st.setDouble(2, Double.parseDouble(objIP.getSPDisc()));
         st.setDouble(3, Double.parseDouble(objIP.getPayAmount()));
         st.setString(4, SPdate);
         st.setDouble(5, Double.parseDouble(objIP.getSPDisc()));
         st.setString(6, objIP.getStatus());
-        
+
         st.executeUpdate();
-        
+
     }
-    
+
     static ArrayList<OBJPaymentSchedule> getSchedule(String invoiceNo, String VOUDate, Connection con) throws SQLException {
         ArrayList<OBJPaymentSchedule> il = new ArrayList<OBJPaymentSchedule>();
         OBJPaymentSchedule obj = null;
@@ -181,9 +181,9 @@ public class DAOInvoList {
             il.add(obj);
         }
         return il;
-        
+
     }
-    
+
     public static ArrayList<OBJPaymentSchedule> getScheduleRev(String invoiceNo, String VOUDate, Connection con) throws SQLException {
         ArrayList<OBJPaymentSchedule> il = new ArrayList<OBJPaymentSchedule>();
         OBJPaymentSchedule obj = null;
@@ -217,6 +217,6 @@ public class DAOInvoList {
             il.add(obj);
         }
         return il;
-        
+
     }
 }

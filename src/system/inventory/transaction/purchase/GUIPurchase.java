@@ -185,6 +185,8 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
                     } else {
                         JOptionPane.showMessageDialog(null, "Saving fail...");
                     }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Payment Type");
                 }
             }
         }
@@ -494,11 +496,52 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
     private void addNewRow() {
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
         int row = jTable1.getRowCount();
-        dt.addRow(new Object[]{row + 1, "", "", "", "", "", "", "", "", ""});
-        jTable1.editCellAt(row, 1);
+        boolean isEmptyRowAvailable = false;
+        if (row > 0) {
+            isEmptyRowAvailable = checkEmptyRow(row - 1);
+        }
+        if (isEmptyRowAvailable || row == 0) {
+            dt.addRow(new Object[]{row + 1, "", "", "", "", "", "", "", "", "", "", ""});
+        } else {
+            row--;
+        }
+        if (jTable1.getRowCount() > 1) {
+            jTable1.editCellAt(row, 1);
+        }
 //        jTable1.setCellSelectionEnabled(true);
         jTable1.setRowSelectionInterval(row, row);
         jTextField1.grabFocus();
+
+        if (jTable1.getRowCount() > 1) {
+            loadItem();
+        }
+
+    }
+
+    private boolean checkEmptyRow(int i) {
+        int row = jTable1.getRowCount();
+        DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
+        boolean b;
+//        for (int i = 0; i < row; i++) {
+        if (df.getValueAt(i, 1).toString() == null || df.getValueAt(i, 1).toString().equals("") || df.getValueAt(i, 1).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 2).toString() == null || df.getValueAt(i, 2).toString().equals("") || df.getValueAt(i, 2).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 3).toString() == null || df.getValueAt(i, 3).toString().equals("") || df.getValueAt(i, 3).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 4).toString() == null || df.getValueAt(i, 4).toString().equals("") || df.getValueAt(i, 4).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 5).toString() == null || df.getValueAt(i, 5).toString().equals("") || df.getValueAt(i, 5).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 6).toString() == null || df.getValueAt(i, 6).toString().equals("") || df.getValueAt(i, 6).toString().isEmpty()) {
+            b = false;
+        } else if (df.getValueAt(i, 7).toString() == null || df.getValueAt(i, 7).toString().equals("") || df.getValueAt(i, 7).toString().isEmpty()) {
+            b = false;
+        } else {
+            b = df.getValueAt(i, 8).toString() != null && !df.getValueAt(i, 8).toString().equals("") && !df.getValueAt(i, 8).toString().isEmpty();
+        }
+//                }
+        return b;
     }
 
     private void clrTable() {
@@ -803,14 +846,13 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
         if (!txtStoreCode.getText().isEmpty()) {
             ItemList i = new ItemList(null, true, txtStoreCode.getText());
             i.setVisible(true);
-            if (ItemList.itemSearch.getCode() != null) {
+            if (null != ItemList.itemSearch && ItemList.itemSearch.getCode() != null) {
                 jTextField1.setText(ItemList.itemSearch.getCode());
+                ItemList.itemSearch = null;
+                jTextField1.setFocusable(false);
+                cellEdit();
+                loadTable();
             }
-            ItemList.itemSearch = null;
-            jTextField1.setFocusable(false);
-            cellEdit();
-            loadTable();
-
         } else {
             txtStoreCode.grabFocus();
             JOptionPane.showMessageDialog(null, "Pleas select the store first...");
@@ -885,8 +927,10 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
         double d = 0.00;
         int row = jTable1.getRowCount();
         for (int i = 0; i < row; i++) {
-            d += Double.parseDouble(df.getValueAt(i, 7).toString());
-            d1 += Double.parseDouble(df.getValueAt(i, 8).toString());
+            if (null != df.getValueAt(i, 7) && null != df.getValueAt(i, 8)) {
+                d += Double.parseDouble(df.getValueAt(i, 7).toString());
+                d1 += Double.parseDouble(df.getValueAt(i, 8).toString());
+            }
         }
         txtGrossAmount.setText(Locals.currencyFormat(d1));
         txtDiscount.setText(Locals.currencyFormat(d));
@@ -959,17 +1003,17 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
             if (jTable1.getValueAt(i, 4).equals("") || jTable1.getValueAt(i, 4) == null) {
                 b = false;
             }
-            
-            if(jTable1.getValueAt(i, 6).equals("") || jTable1.getValueAt(i, 6) == null){
-                 b = false;
+
+            if (jTable1.getValueAt(i, 6).equals("") || jTable1.getValueAt(i, 6) == null) {
+                b = false;
             }
-            
-            if(jTable1.getValueAt(i, 10).equals("") || jTable1.getValueAt(i, 10) == null){
-                 b = false;
+
+            if (jTable1.getValueAt(i, 10).equals("") || jTable1.getValueAt(i, 10) == null) {
+                b = false;
             }
-            
-            if(jTable1.getValueAt(i, 11).equals("") || jTable1.getValueAt(i, 11) == null){
-                 b = false;
+
+            if (jTable1.getValueAt(i, 11).equals("") || jTable1.getValueAt(i, 11) == null) {
+                b = false;
             }
 
         }
@@ -1240,14 +1284,14 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
         jLabel7 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
-            }
-        });
         jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 jTextField1FocusGained(evt);
+            }
+        });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
             }
         });
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -1266,7 +1310,6 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
         setBackground(new java.awt.Color(220, 239, 220));
         setClosable(true);
         setTitle("Purchase(GRN)");
-        setOpaque(true);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel1.setMaximumSize(new java.awt.Dimension(788, 437));
@@ -2002,7 +2045,7 @@ public class GUIPurchase extends javax.swing.JInternalFrame {
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtCrPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
         );

@@ -5,10 +5,6 @@
  */
 package system.accounts.transaction.journalvoucher.cancel;
 
-import accountpackage.AccountPackage;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package system.inventory.transaction.stock.stock_adgesment;
 
 /**
@@ -11,6 +10,7 @@ package system.inventory.transaction.stock.stock_adgesment;
  * @author RoWi
  */
 public class OBJAdjestmentHistory {
+
     private String adjNo;
     private String itemCode;
     private String description;
@@ -19,8 +19,9 @@ public class OBJAdjestmentHistory {
     private String deference;
     private String systemValue;
     private String manualValue;
+    private String storeCode;
 
-    public OBJAdjestmentHistory(String adjNo, String itemCode, String description, String systemStock, String manualStock, String deference, String systemValue, String manualValue) {
+    public OBJAdjestmentHistory(String adjNo, String itemCode, String description, String systemStock, String manualStock, String deference, String systemValue, String manualValue, String storeCode) {
         this.adjNo = adjNo;
         this.itemCode = itemCode;
         this.description = description;
@@ -29,6 +30,7 @@ public class OBJAdjestmentHistory {
         this.deference = deference;
         this.systemValue = systemValue;
         this.manualValue = manualValue;
+        this.storeCode = storeCode;
     }
 
     public String getAdjNo() {
@@ -94,4 +96,18 @@ public class OBJAdjestmentHistory {
     public void setManualValue(String manualValue) {
         this.manualValue = manualValue;
     }
+
+    @Override
+    public String toString() {
+        return itemCode; //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public String getStoreCode() {
+        return storeCode;
+    }
+
+    public void setStoreCode(String storeCode) {
+        this.storeCode = storeCode;
+    }
+
 }

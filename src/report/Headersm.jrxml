@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Header" pageWidth="555" pageHeight="55" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f77aba06-b8f0-4e69-93c3-b1b3e748fad7">
-	<property name="ireport.zoom" value="4.0"/>
-	<property name="ireport.x" value="23"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString language="SQL">
 		<![CDATA[]]>
@@ -9,40 +9,40 @@
 	<title>
 		<band height="54">
 			<image>
-				<reportElement uuid="b083ff92-2d00-484a-8750-1f3c25f21947" x="6" y="4" width="59" height="44"/>
+				<reportElement x="6" y="4" width="59" height="44" uuid="b083ff92-2d00-484a-8750-1f3c25f21947"/>
 				<imageExpression><![CDATA["../img/Logo.png"]]></imageExpression>
 			</image>
 			<line direction="BottomUp">
-				<reportElement uuid="bfd4e961-1d70-475f-96e6-9a4b903749df" x="73" y="4" width="1" height="45"/>
+				<reportElement x="73" y="4" width="1" height="45" uuid="bfd4e961-1d70-475f-96e6-9a4b903749df"/>
 			</line>
 			<textField pattern="dd/MM/yyyy HH.mm.ss">
-				<reportElement uuid="3e71c08b-8c21-431b-b754-c9f531524a0a" x="385" y="35" width="130" height="13"/>
+				<reportElement x="385" y="35" width="130" height="13" uuid="3e71c08b-8c21-431b-b754-c9f531524a0a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="c1f7323d-b289-4c9c-85a1-a9fa4ead64fe" x="83" y="34" width="190" height="14"/>
+				<reportElement x="83" y="34" width="190" height="14" uuid="c1f7323d-b289-4c9c-85a1-a9fa4ead64fe"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tel : 081-2307816]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9c41d2b2-edcb-4281-b5ed-5247be373366" x="83" y="22" width="190" height="20"/>
+				<reportElement x="83" y="22" width="190" height="20" uuid="9c41d2b2-edcb-4281-b5ed-5247be373366"/>
 				<textElement>
 					<font size="10" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Main Streat Poojapitiya.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="8cc678dd-7765-43ec-903d-8ff59b0f995a" x="83" y="4" width="289" height="30"/>
+				<reportElement x="83" y="4" width="289" height="30" uuid="8cc678dd-7765-43ec-903d-8ff59b0f995a"/>
 				<textElement>
 					<font size="14" isBold="true" isItalic="false"/>
 				</textElement>
 				<text><![CDATA[Mahesh Furnitures & Electricals]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="54af27cd-d3aa-41c0-aaa5-0ce7f75d0e01" x="399" y="11" width="116" height="20"/>
+				<reportElement x="399" y="11" width="116" height="20" uuid="54af27cd-d3aa-41c0-aaa5-0ce7f75d0e01"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10" isBold="true"/>
 				</textElement>

@@ -215,7 +215,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         txtGroupCode.setText("");
         txtGroup.setText("");
         txtcatCode.setText("");
-        txtcat.setText("");
+        txtCatName.setText("");
         txtMinLevel.setText("0.00");
         txtRecLevel.setText("0.00");
         txtStockinHand.setText("0.00");
@@ -309,7 +309,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         txtGroupCode.setEnabled(state);
         txtGroup.setEnabled(state);
         txtcatCode.setEnabled(state);
-        txtcat.setEnabled(state);
+        txtCatName.setEnabled(state);
         txtMinLevel.setEnabled(state);
         txtRecLevel.setEnabled(state);
         txtStockinHand.setEnabled(state);
@@ -353,7 +353,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         txtGroupCode.setText(obj.getGroupcode());
         txtGroup.setText(SERItemMaster.setName(obj.getGroupcode(), "ItemGroup", "GroupCode"));
         txtcatCode.setText(obj.getCatcode());
-        txtcat.setText(SERItemMaster.setName(obj.getCatcode(), "ItemCategory", "CatCode"));
+        txtCatName.setText(SERItemMaster.setName(obj.getCatcode(), "ItemCategory", "CatCode"));
         txtMinLevel.setText(obj.getMinlevel());
         txtRecLevel.setText(obj.getReclevel());
         txtStockinHand.setText(obj.getStockinhand());
@@ -366,7 +366,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         txtCostCode.setText(obj.getCostcenter());
 
         txtStoreCode.setText(obj.getStore());
-        txtcat.setText(SERItemMaster.setName(obj.getStore(), "Store", "StoreCode"));
+        txtStore.setText(SERItemMaster.setName(obj.getStore(), "Store", "StoreCode"));
         txtSalePrice.setText(obj.getSalePrice());
         txtMinSalePrice.setText(obj.getMinSalePrice());
         txtDisc.setText(obj.getDisc());
@@ -420,7 +420,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         String code = accountpackage.AccountPackage.CODE;
         String name = accountpackage.AccountPackage.NAME;
         txtcatCode.setText(code);
-        txtcat.setText(name);
+        txtCatName.setText(name);
         accountpackage.AccountPackage.CODE = "";
         accountpackage.AccountPackage.NAME = "";
 
@@ -650,7 +650,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         txtGroupCode = new javax.swing.JTextField();
         jLayeredPane4 = new javax.swing.JLayeredPane();
         cmdCat = new javax.swing.JButton();
-        txtcat = new javax.swing.JTextField();
+        txtCatName = new javax.swing.JTextField();
         txtcatCode = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -856,8 +856,8 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         jLayeredPane3.add(cmdGroup);
         cmdGroup.setBounds(33, 0, 21, 20);
 
-        txtGroup.setBackground(new java.awt.Color(255, 255, 241));
         txtGroup.setEditable(false);
+        txtGroup.setBackground(new java.awt.Color(255, 255, 241));
         jLayeredPane3.add(txtGroup);
         txtGroup.setBounds(55, 0, 170, 20);
         jLayeredPane3.add(txtGroupCode);
@@ -874,10 +874,10 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
         jLayeredPane4.add(cmdCat);
         cmdCat.setBounds(33, 0, 21, 20);
 
-        txtcat.setBackground(new java.awt.Color(255, 255, 241));
-        txtcat.setEditable(false);
-        jLayeredPane4.add(txtcat);
-        txtcat.setBounds(55, 0, 140, 20);
+        txtCatName.setEditable(false);
+        txtCatName.setBackground(new java.awt.Color(255, 255, 241));
+        jLayeredPane4.add(txtCatName);
+        txtCatName.setBounds(55, 0, 140, 20);
         jLayeredPane4.add(txtcatCode);
         txtcatCode.setBounds(0, 0, 34, 20);
 
@@ -1356,6 +1356,7 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JCheckBox txtBatch;
+    private javax.swing.JTextField txtCatName;
     private javax.swing.JTextField txtCode;
     private javax.swing.JTextField txtCostCenter;
     private javax.swing.JTextField txtCostCode;
@@ -1380,7 +1381,6 @@ public class GUIItemMaster extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtUnitName;
     private javax.swing.JFormattedTextField txtWarr;
     private javax.swing.JComboBox txtWarrType;
-    private javax.swing.JTextField txtcat;
     private javax.swing.JTextField txtcatCode;
     // End of variables declaration//GEN-END:variables
     private OBJItemMaster obj;

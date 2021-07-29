@@ -29,6 +29,19 @@ public class SERFindWindow {
         return data; 
     }
     
+    static ArrayList<OBJFindWindow> getDataWithCustomeQuery(String table, String code, String name, String customeWhere) {
+        ArrayList<OBJFindWindow> data = null;
+        try {
+            Connection conn = DBConnection.getConnection();
+            data = DAOFindWindow.getDataWithCustomeQuery(conn, table, code, name, customeWhere);
+            conn.close();
+        } catch (SQLException ex) {
+            Exp.Handle(ex);
+        }
+
+        return data; 
+    }
+    
     static ArrayList<OBJFindWindow> getData(String table1, String table2, String code, String name, String key, String status) {
         ArrayList<OBJFindWindow> data = null;
         try {

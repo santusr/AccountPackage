@@ -12,7 +12,6 @@ package system.inventory.master.unit;
 
 import javax.swing.JOptionPane;
 import mainApp.findwindow.GUIFindWindow;
-import system.masters.payterms.SERPayTerm;
 
 /**
  *
@@ -261,7 +260,7 @@ public class GUIUnit extends javax.swing.JInternalFrame {
         cmdExit = new javax.swing.JButton();
 
         setClosable(true);
-        setTitle("Store File Creation");
+        setTitle("Unit Creation");
 
         jLabel1.setText("Unit Code");
 
@@ -415,7 +414,7 @@ public class GUIUnit extends javax.swing.JInternalFrame {
                     .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(135, 135, 135))
-            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,7 +428,7 @@ public class GUIUnit extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -455,7 +454,7 @@ private void cmdPrevActionPerformed(java.awt.event.ActionEvent evt) {
 
 private void cmdNextActionPerformed(java.awt.event.ActionEvent evt) {                                        
     Index++;
-    indexCount = SERPayTerm.getIndex();
+    indexCount = SERUnit.getIndex();
     if (Index < indexCount) {
         getNavi();
     } else {
@@ -464,7 +463,7 @@ private void cmdNextActionPerformed(java.awt.event.ActionEvent evt) {
 }                                       
 
 private void cmdLastActionPerformed(java.awt.event.ActionEvent evt) {                                        
-    Index = SERPayTerm.getIndex();
+    Index = SERUnit.getIndex() - 1;
     getNavi();
 }                                       
 

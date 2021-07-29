@@ -22,13 +22,13 @@ class SERStockAdjestment {
         OBJAdjestment obj = obji;
 
         Connection conn = DBConnection.getConnection();
-        try{
+        try {
             conn.setAutoCommit(false);
             DAOStockAdjestment.save(obj, conn, Act);
             conn.commit();
 
             return true;
-        } catch (SQLException ex) {            
+        } catch (SQLException ex) {
             conn.rollback();
             if (ex.getErrorCode() == 1062) {
                 JOptionPane.showMessageDialog(null, "Duplicate Code is not allowed", "Warning", JOptionPane.ERROR_MESSAGE);
@@ -101,7 +101,7 @@ class SERStockAdjestment {
     }
 
     public static OBJAdjestment serch(String code) {
-        OBJAdjestment obj = null;
+        OBJAdjestment obj = new OBJAdjestment();
 
         try (Connection conn = DBConnection.getConnection()) {
             obj = DAOStockAdjestment.serch(conn, code);

@@ -21,7 +21,7 @@ import core.system_transaction.item_trans.OBJItemTransaction;
  * @author RABID
  */
 public class TRSAccount {
-    
+
     public static int executeTrans(
             OBJTransaction transaction,
             OBJPayment payment,
@@ -50,8 +50,8 @@ public class TRSAccount {
 
             //save Payment
             if (payment != null) {
-                
-        System.out.println("2");
+
+                System.out.println("2");
                 sql = "INSERT INTO payment (transaction_date, cost_code, cust_code, cashire_session, amount, transaction, transaction_type, status, user) VALUES (?,?,?,?,?,?,?,?,?)";
                 PreparedStatement st1 = con.prepareStatement(sql, 1);
                 st1.setString(1, payment.getTransactionDate());
@@ -64,17 +64,17 @@ public class TRSAccount {
                 st1.setString(8, payment.getStatus());
                 st1.setString(9, accountpackage.AccountPackage.user);
                 st1.executeUpdate();
-        System.out.println("3");
-                
+                System.out.println("3");
+
                 ResultSet resPayment;
                 resPayment = st1.getGeneratedKeys();
                 if (resPayment.next()) {
-                    
+
                     int paymentIndexNo = resPayment.getInt(1);
 
                     //save Payment Information
                     for (OBJPaymentInfo paymentInformation : paymentsInfo) {
-        System.out.println("4");
+                        System.out.println("4");
                         sql = "INSERT INTO payment_information (payment, payment_setting, amount, transaction, transaction_type, refarance_no) VALUES (?,?,?,?,?,?)";
                         PreparedStatement st2 = con.prepareStatement(sql);
                         st2.setString(1, paymentIndexNo + "");
@@ -85,12 +85,12 @@ public class TRSAccount {
                         st2.setString(6, paymentInformation.getReferance_no());
                         st2.executeUpdate();
                     }
-                    
+
                 }
-                
+
             }
             if (accountTranses != null) {
-        System.out.println("5");
+                System.out.println("5");
                 for (OBJAccountTrans accountTrans : accountTranses) {
                     sql = "INSERT INTO account_trans (transaction_date, cost_code, account_setting, description, account, credit_amount, debit_amount, transaction, transaction_type, type, status, user) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                     PreparedStatement st3 = con.prepareStatement(sql);
@@ -107,13 +107,18 @@ public class TRSAccount {
                     st3.setString(11, accountTrans.getStatus());
                     st3.setString(12, accountpackage.AccountPackage.user);
                     st3.executeUpdate();
-        System.out.println("6");
+                    System.out.println("6");
                 }
             }
-            
+
             if (itemTransactions != null) {
                 for (OBJItemTransaction itemTransaction : itemTransactions) {
-                    sql = "INSERT INTO item_transaction (transaction, transaction_type, transaction_date, item, store, credit_quantity, debit_quantity, credit_price, debit_price, status, user) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                    if ((null != itemTransaction.getDebitQty()
+                            && Double.parseDouble(itemTransaction.getDebitQty()) > 0.0d)
+                            || null != itemTransaction.getCreditQty()
+                            && Double.parseDouble(itemTransaction.getCreditQty()) > 0.0d) {
+                        sql = "INSERT INTO item_transaction (transaction, transaction_type, transaction_date, item, store, credit_quantity, debit_quantity, credit_price, debit_price, status, user) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                    }
                     PreparedStatement st3 = con.prepareStatement(sql);
                     st3.setString(1, transIndexNo + "");
                     st3.setString(2, itemTransaction.getTransactionType());

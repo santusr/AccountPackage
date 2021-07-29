@@ -84,6 +84,15 @@ public class GUIFindWindow extends javax.swing.JDialog {
         initOthers();
     }
 
+    public GUIFindWindow(Object object, boolean b, String table, String code, String name, String customWhere, boolean isCustom) {
+        this(null, b);
+        TABLE = table;
+        this.code = code;
+        this.name = name;
+        publishTableWithCustomWhere(table, code, name, customWhere);
+        initOthers();
+    }
+
     private void doAct() {
         int cou = jTable1.getSelectedRowCount();
 
@@ -137,6 +146,19 @@ public class GUIFindWindow extends javax.swing.JDialog {
 
     private void publishTable(String table, String code, String name, String s, String ss) {
         ArrayList<OBJFindWindow> Adata = SERFindWindow.getData(table, code, name, s, ss);
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        int row = model.getRowCount();
+        for (int i = 0; i < row; i++) {
+            model.removeRow(0);
+        }
+        // Vector v = new Vector();
+        for (OBJFindWindow data : Adata) {
+            model.addRow(new Object[]{data.getCode().toString(), data.getName().toString()});
+        }
+    }
+
+    private void publishTableWithCustomWhere(String table, String code, String name, String customWhere) {
+        ArrayList<OBJFindWindow> Adata = SERFindWindow.getDataWithCustomeQuery(table, code, name,customWhere);
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         int row = model.getRowCount();
         for (int i = 0; i < row; i++) {

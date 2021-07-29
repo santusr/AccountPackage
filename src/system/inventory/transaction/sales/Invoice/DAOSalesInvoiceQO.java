@@ -498,18 +498,19 @@ public class DAOSalesInvoiceQO {
 //            }
         } else {
             JOptionPane.showMessageDialog(null, "Item not found in this store...");
-            obj = new OBJSalesInvoiceQO(
-                    "",
-                    "",
-                    "",
-                    "0.00",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "");
+            // Commented at 26/07/2021
+//            obj = new OBJSalesInvoiceQO(
+//                    "",
+//                    "",
+//                    "",
+//                    "0.00",
+//                    "",
+//                    "",
+//                    "",
+//                    "",
+//                    "",
+//                    "",
+//                    "");
         }
 
         return obj;

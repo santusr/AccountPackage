@@ -57,9 +57,14 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
                                 jTable1.getValueAt(i, 4).toString(),
                                 jTable1.getValueAt(i, 5).toString(),
                                 jTable1.getValueAt(i, 6).toString(),
-                                jTable1.getValueAt(i, 7).toString());
+                                jTable1.getValueAt(i, 7).toString(),
+                                txtStoreCode.getText());
 
                         obja.add(objh);
+                    }
+                    String status = "0";
+                    if (jCheckBox1.isSelected()) {
+                        status = "1";
                     }
                     obj = new OBJAdjestment(
                             txtAdjNo.getText(),
@@ -71,6 +76,7 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
                             txtApproBy.getText(),
                             txtRemark.getText(),
                             accountpackage.AccountPackage.user,
+                            status,
                             obja);
 
                     boolean b = SERStockAdjestment.save(obj, Act);
@@ -130,15 +136,22 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
             int row = 0;
             DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
             for (OBJAdjestmentHistory oBJAdjestmentHistory : adjestmentHistorys) {
+                String adjID = oBJAdjestmentHistory.getAdjNo().equals("0") ? txtAdjNo.getText() : oBJAdjestmentHistory.getAdjNo();
+                txtAdjNo.setText(adjID);
+
+                String storeCode = oBJAdjestmentHistory.getStoreCode();
+                txtStoreCode.setText(storeCode);
+                Double systemStock = Double.parseDouble(oBJAdjestmentHistory.getSystemStock());
+                Double manualStock = Double.parseDouble(oBJAdjestmentHistory.getManualStock());
                 dt.addRow(new Object[]{
-                    row + 1, 
-                    oBJAdjestmentHistory.getItemCode(), 
-                    oBJAdjestmentHistory.getDescription(), 
-                    oBJAdjestmentHistory.getSystemStock(), 
-                    oBJAdjestmentHistory.getManualStock(), 
-                    oBJAdjestmentHistory.getDeference(), 
-                    oBJAdjestmentHistory.getSystemValue(), 
-                    oBJAdjestmentHistory.getManualValue()});
+                    row++,
+                    oBJAdjestmentHistory,
+                    oBJAdjestmentHistory.getDescription(),
+                    oBJAdjestmentHistory.getSystemStock(),
+                    oBJAdjestmentHistory.getManualStock(),
+                    oBJAdjestmentHistory.getDeference(),
+                    systemStock > 0 ? Double.parseDouble(oBJAdjestmentHistory.getSystemValue()) * systemStock : "0.00",
+                    manualStock > 0 ? Double.parseDouble(oBJAdjestmentHistory.getManualValue()) * manualStock : "0.00"});
             }
         }
         doCalAll();
@@ -326,13 +339,13 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
     }
 
     private void doCalc(int i, DefaultTableModel df) {
-        double d = Double.parseDouble(df.getValueAt(i, 3).toString());
-        double d1 = Double.parseDouble(df.getValueAt(i, 4).toString());
-        double d2 = Double.parseDouble(df.getValueAt(i, 6).toString());
-        df.setValueAt(Locals.currencyFormat(d2 * d1 / d), i, 7);
-        
-        df.setValueAt(Locals.currencyFormat(d1 - d), i, 5);
-        
+        OBJAdjestmentHistory adjestmentHistory = (OBJAdjestmentHistory) df.getValueAt(i, 1);
+        double d = Double.parseDouble(df.getValueAt(i, 4).toString());
+        double d1 = Double.parseDouble(df.getValueAt(i, 3).toString());
+        df.setValueAt(Locals.currencyFormat(d * Double.parseDouble(adjestmentHistory.getSystemValue())), i, 7);
+
+        df.setValueAt(Locals.currencyFormat(d - d1), i, 5);
+
     }
 
     private void doCalAll() {
@@ -510,6 +523,7 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
         txtSelectedItemName1 = new javax.swing.JLabel();
         txtSystemValue = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         jLabel26.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -823,6 +837,13 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
 
         jLabel2.setText("( Manual - System )");
 
+        jCheckBox1.setText("Compleat");
+        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBox1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -868,6 +889,8 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtTransDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jCheckBox1)
+                                .addGap(18, 18, 18)
                                 .addComponent(jCheckBox2))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLayeredPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -890,9 +913,11 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
                             .addComponent(txtAdjNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtjvnletter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)))
-                    .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jCheckBox1))
                     .addComponent(txtTransDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(8, 8, 8)
+                .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -901,7 +926,7 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -937,6 +962,10 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
             loadTable();
         }
     }//GEN-LAST:event_jTable1KeyReleased
+
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
         setItem();
@@ -1025,6 +1054,7 @@ public class GUIStockAdjesment extends javax.swing.JInternalFrame {
     private javax.swing.JButton cmdSave;
     private javax.swing.JButton cmdStoreF;
     private javax.swing.JButton cmdView;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel12;

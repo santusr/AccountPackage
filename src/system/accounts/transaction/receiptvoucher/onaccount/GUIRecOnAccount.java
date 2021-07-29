@@ -253,11 +253,11 @@ private void cmdNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:
     private javax.swing.JToolBar.Separator jSeparator5;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
-    private GUIMultipleDebiting guimultiplicrediting;
+    private GUIMultipleCrediting guimultiplicrediting;
 
     private void loadPanel() {
         this.setTitle("Receipt Voucher (On Account)");
-        guimultiplicrediting = new GUIMultipleDebiting();
+        guimultiplicrediting = new GUIMultipleCrediting();
         add(guimultiplicrediting, 1);
         setSize(668, 405);
     }

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package system.inventory.transaction.stock.stock_adgesment;
 
 import java.util.ArrayList;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
  * @author RoWi
  */
 public class OBJAdjestment {
+
     private String AdjNo;
     private String store;
     private String date;
@@ -22,9 +22,10 @@ public class OBJAdjestment {
     private String AppBy;
     private String remarks;
     private String user;
+    private String status;
     private ArrayList<OBJAdjestmentHistory> ajestmentHistorys;
 
-    public OBJAdjestment(String AdjNo, String store, String date, String stockValue, String adjestValue, String PrepBy, String AppBy, String remarks, String user, ArrayList<OBJAdjestmentHistory> ajestmentHistorys) {
+    public OBJAdjestment(String AdjNo, String store, String date, String stockValue, String adjestValue, String PrepBy, String AppBy, String remarks, String user, String status, ArrayList<OBJAdjestmentHistory> ajestmentHistorys) {
         this.AdjNo = AdjNo;
         this.store = store;
         this.date = date;
@@ -34,7 +35,11 @@ public class OBJAdjestment {
         this.AppBy = AppBy;
         this.remarks = remarks;
         this.user = user;
+        this.status = status;
         this.ajestmentHistorys = ajestmentHistorys;
+    }
+
+    public OBJAdjestment() {
     }
 
     public String getAdjNo() {
@@ -116,6 +121,13 @@ public class OBJAdjestment {
     public void setAjestmentHistorys(ArrayList<OBJAdjestmentHistory> ajestmentHistorys) {
         this.ajestmentHistorys = ajestmentHistorys;
     }
-    
-    
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
 }

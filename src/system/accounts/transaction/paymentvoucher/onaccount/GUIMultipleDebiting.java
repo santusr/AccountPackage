@@ -128,7 +128,7 @@ public class GUIMultipleDebiting extends javax.swing.JPanel {
         for (OBJPaymentInfo info : paymentsInfo) {
             OBJAccountTrans accountTrans = new OBJAccountTrans();
             accountTrans.setTransactionDate(Locals.setDateFormat(txtJVDate.getDate()));
-            accountTrans.setCostCode(txtCost.getText());
+            accountTrans.setCostCode(txtCostCenter.getText());
             accountTrans.setAccountSetting(null);
 
             switch (info.getPaymentSetting()) {
@@ -156,7 +156,7 @@ public class GUIMultipleDebiting extends javax.swing.JPanel {
         for (int i = 0; i < tblDebit.getRowCount(); i++) {
             OBJAccountTrans accountTrans = new OBJAccountTrans();
             accountTrans.setTransactionDate(Locals.setDateFormat(txtJVDate.getDate()));
-            accountTrans.setCostCode(txtCost.getText());
+            accountTrans.setCostCode(txtCostCenter.getText());
             accountTrans.setAccountSetting(null);
             accountTrans.setDescription(AccountTransactionDescription.VOUCHER_AMOUNT + "Debit Account : " + tblDebit.getValueAt(i, 1).toString());
             accountTrans.setAccount(tblDebit.getValueAt(i, 1).toString());

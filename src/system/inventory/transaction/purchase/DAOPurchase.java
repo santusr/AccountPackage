@@ -103,7 +103,7 @@ public class DAOPurchase {
                         + "SET "
                         + "             `SellingRate` = '" + obj.getSellingRate() + "', "
                         + "             `minSellingRate` = '" + obj.getMinSellingRate() + "', "
-                        + "             `CostRate` = ((CostRate * StockInHand)+'" + Double.parseDouble(obj.getNet()) + "') / (StockInHand + '" + Double.parseDouble(obj.getQuantity()) + "'), "
+                        + "             `CostRate` = ((CostRate * if(StockInHand > 0, StockInHand, '1'))+'" + Double.parseDouble(obj.getNet()) + "') / (if(StockInHand > 0, StockInHand, '1') + '" + Double.parseDouble(obj.getQuantity()) + "'), "
                         + "             `StockInHand` =  `StockInHand` + '" + obj.getQuantity() + "' "
                         + "WHERE "
                         + "             `ItemCode` = '" + obj.getItemCode() + "'";

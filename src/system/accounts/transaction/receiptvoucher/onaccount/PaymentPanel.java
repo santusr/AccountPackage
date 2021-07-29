@@ -33,7 +33,7 @@ public class PaymentPanel extends javax.swing.JDialog {
             cheque.setAmount(txtAmount.getText());
             cheque.setRemarks(txtRemark.getText());
 
-            GUIMultipleDebiting.cheque = cheque;
+            GUIMultipleCrediting.cheque = cheque;
 
             this.dispose();
         } else {

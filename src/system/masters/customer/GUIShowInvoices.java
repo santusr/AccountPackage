@@ -42,10 +42,10 @@ public class GUIShowInvoices extends javax.swing.JFrame {
         int i = 1;
         DefaultTableModel dt = (DefaultTableModel) tblInvoice.getModel();
         for (OBJInvoList objq : obji) {
-            dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getPaiedAmount(), objq.getOwingAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate(), objq.getLoanNo(), objq.getStatus().equals("0")? "PENDING" : "PAID"});
+            dt.addRow(new Object[]{i, objq.getInvoNo(), objq.getInvoDate(), objq.getOriAmount(), objq.getPaiedAmount(), objq.getOwingAmount(), objq.getInvoBalance(), objq.getInstallAmount(), objq.getPayDate(), objq.getLoanNo(), objq.getStatus().equals("0") ? "PENDING" : "PAID"});
             i++;
         }
-        
+
         calcAll();
     }
 
@@ -117,6 +117,7 @@ public class GUIShowInvoices extends javax.swing.JFrame {
         txtTotPaied = new javax.swing.JFormattedTextField();
         txtTotInvoBalance = new javax.swing.JFormattedTextField();
         txtInstalAmount = new javax.swing.JFormattedTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Customer Invoice");
@@ -262,6 +263,14 @@ public class GUIShowInvoices extends javax.swing.JFrame {
         jLayeredPane1.add(txtInstalAmount);
         txtInstalAmount.setBounds(510, 0, 90, 20);
 
+        jButton1.setText("Show Deponents");
+        jButton1.setEnabled(false);
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -272,7 +281,9 @@ public class GUIShowInvoices extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 392, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 706, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -281,11 +292,13 @@ public class GUIShowInvoices extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLayeredPane2)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLayeredPane2)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 379, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -296,7 +309,13 @@ public class GUIShowInvoices extends javax.swing.JFrame {
 
     private void tblInvoiceMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblInvoiceMouseClicked
         int clickCount = evt.getClickCount();
-        if(clickCount == 2){
+        int i = tblInvoice.getSelectedRowCount();
+        if (i > 0) {
+            jButton1.setEnabled(true);
+        } else {
+            jButton1.setEnabled(!true);
+        }
+        if (clickCount == 2) {
             showReport();
         }
     }//GEN-LAST:event_tblInvoiceMouseClicked
@@ -315,9 +334,13 @@ public class GUIShowInvoices extends javax.swing.JFrame {
         loadInvoice();
     }//GEN-LAST:event_txtCustAccCodeActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        showDeponent();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdCust;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLayeredPane jLayeredPane1;
@@ -339,6 +362,17 @@ public class GUIShowInvoices extends javax.swing.JFrame {
         String InvoNo = tblInvoice.getValueAt(row, 1).toString();
         try {
             SERInvoDetReport invoDetReport = new SERInvoDetReport(InvoNo, "INVONO", "REPCustomerInvoiceDetAll.jasper", "Customer Invoice Det. Invoice No. : " + InvoNo);
+            invoDetReport.setVisible(true);
+        } catch (Exception ex) {
+            Logger.getLogger(GUIShowInvoices.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private void showDeponent() {
+        int row = tblInvoice.getSelectedRow();
+        String InvoNo = tblInvoice.getValueAt(row, 1).toString();
+        try {
+            SERInvoDetReport invoDetReport = new SERInvoDetReport(InvoNo, "INVONO", "REPDeponent.jasper", "Loan Deponents. Invoice No. : " + InvoNo);
             invoDetReport.setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(GUIShowInvoices.class.getName()).log(Level.SEVERE, null, ex);

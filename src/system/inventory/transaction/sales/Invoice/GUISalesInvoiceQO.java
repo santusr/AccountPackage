@@ -46,7 +46,6 @@ import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import mainApp.SERCommen;
 import mainApp.findwindow.GUIFindWindow;
 import system.accounts.transaction.cheque.OBJCheque;
@@ -172,8 +171,10 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                             System.out.println("Obja New Sze = " + objaSize);
                             String privInvoNo = "";
                             for (int i = 0; i < row; i++) {
-
-                                String invo = ((OBJSalesInvoiceQO) jTable1.getValueAt(i, 1)).getInvoNo();
+                                OBJSalesInvoiceQO bJSalesInvoiceQO = 
+                                        OBJSalesInvoiceQO.class.isInstance(jTable1.getValueAt(i, 1)) ? 
+                                        (OBJSalesInvoiceQO) jTable1.getValueAt(i, 1) : null;
+                                String invo = null != bJSalesInvoiceQO ? bJSalesInvoiceQO.getInvoNo() : null;
                                 if (invo == null) {
                                     OBJSalesInvoiceQO objSI = SERSalesInvoiceQO.getTablInfo(jTable1.getValueAt(i, 1).toString(), txtStoreCode.getText());
                                     objhi = new OBJSalesInvoiceQO(
@@ -188,7 +189,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                                             jTable1.getValueAt(i, 5).toString(),
                                             jTable1.getValueAt(i, 9).toString(),
                                             txtStoreCode.getText(),
-                                            objSI.getCost_rate(),
+                                            objSI != null ? objSI.getCost_rate() : "0.00",
                                             ItemStatus.SOLDE);
                                     obja.add(objhi);
                                 } else {
@@ -249,7 +250,9 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             for (int i = 0; i < row; i++) {
                 if (checkEmptyRow(i)) {
                     objhi = SERSalesInvoiceQO.getTablInfo(jTable1.getValueAt(i, 1).toString(), txtStoreCode.getText());
-                    cost = cost + (Double.parseDouble(objhi.getCost_rate()) * Double.parseDouble(jTable1.getValueAt(i, 4).toString()));
+                    if (null != objhi) {
+                        cost = cost + (Double.parseDouble(objhi.getCost_rate()) * Double.parseDouble(jTable1.getValueAt(i, 4).toString()));
+                    }
                 }
             }
         }
@@ -690,8 +693,18 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private void addNewRow() {
         DefaultTableModel dt = (DefaultTableModel) jTable1.getModel();
         int row = jTable1.getRowCount();
-        dt.addRow(new Object[]{row + 1, "", "", "", "", "", "", "", "", ""});
+        boolean isEmptyRowAvailable = false;
+        if (row > 0) {
+            isEmptyRowAvailable = checkEmptyRow(row - 1);
+        }
+        if (isEmptyRowAvailable || row == 0) {
+            dt.addRow(new Object[]{row + 1, "", "", "", "", "", "", "", "", ""});
+        } else {
+            row--;
+        }
+
         if (jTable1.getRowCount() > 1) {
+
             jTable1.editCellAt(row, 1);
         }
 //        jTable1.setCellSelectionEnabled(true);
@@ -810,6 +823,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             jTable1.setBackground(new java.awt.Color(249, 249, 229));
         }
         /*
+
          * -----******( )*****-----
          */
 
@@ -883,7 +897,6 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         } else {
             dt.addRow(new Object[]{1, "", "", "", "", "", "", "", "", ""});
         }
-
     }
 
     private void setSuspendContentHistory(ArrayList<OBJSalesInvoiceQO> obja) {
@@ -1036,6 +1049,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         if (i == 0) {
             addNewRow();
         }
+        doCalAll();
     }
 
     private void getCustomer() {
@@ -1109,8 +1123,8 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             jTable1.grabFocus();
             jTable1.setCellSelectionEnabled(true);
             jTable1.editCellAt(i, 4);
-            jFormattedTextField1.grabFocus();
-            jFormattedTextField1.selectAll();
+            txtQuantity.grabFocus();
+            txtQuantity.selectAll();
         }
     }
 
@@ -1123,7 +1137,9 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             b = itc != null && df.isCellEditable(i, 1) && df.getValueAt(i, 4) == "";
             if (b) {
                 objhi = SERSalesInvoiceQO.getTablInfo(itc, txtStoreCode.getText());
-                if (!objhi.getName().equals("") && !objhi.getName().isEmpty()) {
+                if (objhi == null) {
+                    loadItem();
+                } else if (objhi != null && null != objhi.getName() && !objhi.getName().isEmpty()) {
                     jTable1.setValueAt(objhi, i, 1);
                     df.setValueAt(objhi.getName(), i, 2);
                     df.setValueAt(objhi.getUnit(), i, 3);
@@ -1154,9 +1170,9 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
 
     private void doCalc(int i, DefaultTableModel df) {
         if (!(df.getValueAt(i, 4).toString()).equals("")) {
-            double d = Double.parseDouble(df.getValueAt(i, 4).toString());
-            double d1 = Double.parseDouble(df.getValueAt(i, 6).toString());
-            df.setValueAt(Locals.currencyFormat(d * d1), i, 8);
+            double qty = Double.parseDouble(df.getValueAt(i, 4).toString());
+            double unitPrice = Double.parseDouble(df.getValueAt(i, 6).toString());
+            df.setValueAt(Locals.currencyFormat(qty * unitPrice), i, 8);
         }
     }
 
@@ -1165,26 +1181,12 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
         boolean b = true;
         for (int i = 0; i < row; i++) {
-            if (df.getValueAt(i, 1).toString() == null || df.getValueAt(i, 1).toString().equals("") || df.getValueAt(i, 1).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 2).toString() == null || df.getValueAt(i, 2).toString().equals("") || df.getValueAt(i, 2).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 3).toString() == null || df.getValueAt(i, 3).toString().equals("") || df.getValueAt(i, 3).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 4).toString() == null || df.getValueAt(i, 4).toString().equals("") || df.getValueAt(i, 4).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 5).toString() == null || df.getValueAt(i, 5).toString().equals("") || df.getValueAt(i, 5).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 6).toString() == null || df.getValueAt(i, 6).toString().equals("") || df.getValueAt(i, 6).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 7).toString() == null || df.getValueAt(i, 7).toString().equals("") || df.getValueAt(i, 7).toString().isEmpty()) {
-                b = false;
-            } else if (df.getValueAt(i, 8).toString() == null && df.getValueAt(i, 8).toString().equals("") && df.getValueAt(i, 8).toString().isEmpty()) {
-                b = false;
+            b = checkEmptyRow(i);
+            if (!b) {
+                return b;
             }
-            return b;
         }
-        return false;
+        return b;
     }
 
     private boolean checkEmptyRow(int i) {
@@ -1216,20 +1218,23 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private void doCalAll() {
         DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
 
-        double d1 = 0.00;
-        double d = 0.00;
+        double totalAmount = 0.00;
+        double discount = 0.00;
         double oldGros = 0.00;
         int row = jTable1.getRowCount();
         for (int i = 0; i < row; i++) {
-            if (((OBJSalesInvoiceQO) df.getValueAt(i, 1)).getInvoNo() == null) {
+            if (df.getValueAt(i, 1) != null && !df.getValueAt(i, 1).equals("")) {
+//                Object code = df.getValueAt(i, 1);
+//                if (OBJSalesInvoiceQO.class.isInstance(code) && ((OBJSalesInvoiceQO) code).getInvoNo() == null) {
                 if (checkEmptyRow(i)) {
                     try {
-                        d += Double.parseDouble(df.getValueAt(i, 7).toString());
-                        d1 += Double.parseDouble(df.getValueAt(i, 8).toString());
+                        discount += Double.parseDouble(df.getValueAt(i, 7).toString());
+                        totalAmount += Double.parseDouble(df.getValueAt(i, 8).toString());
                     } catch (NumberFormatException e) {
                         System.out.println("Exception in doCalAll " + e);
                     }
                 }
+//                }
             }
         }
         if (obj != null) {
@@ -1238,14 +1243,14 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                     oldGros = oldGros + (Double.parseDouble(oBJSalesInvoiceQO.getRate()) * Double.parseDouble(oBJSalesInvoiceQO.getQuantity()));
                 }
             }
-            d1 = d1 + oldGros;
+            totalAmount = totalAmount + oldGros;
             if (obj.getTotalDiscount() != null) {
-                d = d + Double.parseDouble(obj.getTotalDiscount());
+                discount = discount + Double.parseDouble(obj.getTotalDiscount());
             }
         }
-        txtGrossAmount.setText(Locals.currencyFormat(d1));
-        txtDiscount.setText(Locals.currencyFormat(d));
-        txtNetAmount.setText(Locals.currencyFormat(d1 - d));
+        txtGrossAmount.setText(Locals.currencyFormat(totalAmount));
+        txtDiscount.setText(Locals.currencyFormat(discount));
+        txtNetAmount.setText(Locals.currencyFormat(totalAmount - discount));
         calcDue();
     }
 
@@ -1277,10 +1282,9 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     }
 
     private void calcDue() {
-        double d = Double.parseDouble(txtNetAmount.getText());
-        double d1 = Double.parseDouble(txtPay.getText());
-        d1 = (d - d1);
-        txtDue.setText(Locals.currencyFormat(d1));
+        double invoTotal = Double.parseDouble(txtNetAmount.getText());
+        double paidAmount = Double.parseDouble(txtPay.getText());
+        txtDue.setText(Locals.currencyFormat(invoTotal - paidAmount));
 
     }
 
@@ -1346,16 +1350,16 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private void loadItem() {
 
         if (!txtStoreCode.getText().isEmpty()) {
-            ItemList i = new ItemList(null, true, txtStoreCode.getText());
+            ItemList i = new ItemList(this, true, txtStoreCode.getText());
             i.setVisible(true);
-            if (ItemList.itemSearch.getCode() != null) {
+            if (null != ItemList.itemSearch && ItemList.itemSearch.getCode() != null) {
                 jTextField1.setText(ItemList.itemSearch.getCode());
                 jTextField1.setFocusable(false);
                 ItemList.itemSearch = null;
+                txtPay.grabFocus();
+                cellEdit();
+                loadTable();
             }
-            txtPay.grabFocus();
-            cellEdit();
-            loadTable();
         } else {
             txtStoreCode.grabFocus();
             JOptionPane.showMessageDialog(null, "Please select the store first.");
@@ -1536,7 +1540,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
+        txtQuantity = new javax.swing.JFormattedTextField();
         pm = new javax.swing.JPopupMenu();
         jTextField1 = new javax.swing.JTextField();
         sb = new javax.swing.JScrollPane();
@@ -1636,15 +1640,15 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         txtLoanNo = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
 
-        jFormattedTextField1.setText("jFormattedTextField1");
-        jFormattedTextField1.addActionListener(new java.awt.event.ActionListener() {
+        txtQuantity.setText("jFormattedTextField1");
+        txtQuantity.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jFormattedTextField1ActionPerformed(evt);
+                txtQuantityActionPerformed(evt);
             }
         });
-        jFormattedTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+        txtQuantity.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                jFormattedTextField1KeyReleased(evt);
+                txtQuantityKeyReleased(evt);
             }
         });
 
@@ -1748,8 +1752,8 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jLayeredPane4.add(cmdCostCenter);
         cmdCostCenter.setBounds(71, 0, 20, 20);
 
-        txtCostCenter.setBackground(new java.awt.Color(255, 255, 241));
         txtCostCenter.setEditable(false);
+        txtCostCenter.setBackground(new java.awt.Color(255, 255, 241));
         txtCostCenter.setForeground(new java.awt.Color(153, 0, 0));
         txtCostCenter.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane4.add(txtCostCenter);
@@ -1853,7 +1857,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
 
         txtApproBy.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane1.add(txtApproBy);
-        txtApproBy.setBounds(70, 40, 200, 18);
+        txtApproBy.setBounds(70, 40, 310, 18);
 
         jLabel12.setText("Approved By");
         jLayeredPane1.add(jLabel12);
@@ -1861,7 +1865,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
 
         txtPrepBy.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane1.add(txtPrepBy);
-        txtPrepBy.setBounds(70, 20, 200, 18);
+        txtPrepBy.setBounds(70, 20, 310, 18);
 
         jLabel14.setText("Prepared By");
         jLayeredPane1.add(jLabel14);
@@ -1880,7 +1884,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         txtRef.setEditable(false);
         txtRef.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane1.add(txtRef);
-        txtRef.setBounds(180, 0, 90, 18);
+        txtRef.setBounds(180, 0, 200, 18);
 
         jTable1.setBackground(new java.awt.Color(255, 224, 204));
         jTable1.setForeground(new java.awt.Color(102, 51, 0));
@@ -1921,7 +1925,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             jTable1.getColumnModel().getColumn(2).setPreferredWidth(175);
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(35);
             jTable1.getColumnModel().getColumn(4).setPreferredWidth(35);
-            jTable1.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(jFormattedTextField1));
+            jTable1.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(txtQuantity));
             jTable1.getColumnModel().getColumn(5).setPreferredWidth(45);
             jTable1.getColumnModel().getColumn(6).setPreferredWidth(75);
             jTable1.getColumnModel().getColumn(7).setPreferredWidth(75);
@@ -1951,12 +1955,12 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jLayeredPane7.add(cmdRep);
         cmdRep.setBounds(71, 0, 20, 20);
 
-        txtrep.setBackground(new java.awt.Color(255, 255, 241));
         txtrep.setEditable(false);
+        txtrep.setBackground(new java.awt.Color(255, 255, 241));
         txtrep.setForeground(new java.awt.Color(153, 0, 0));
         txtrep.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane7.add(txtrep);
-        txtrep.setBounds(95, 0, 190, 18);
+        txtrep.setBounds(95, 0, 210, 18);
 
         txtStoreCode.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane9.add(txtStoreCode);
@@ -1968,12 +1972,12 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jLayeredPane9.add(cmdStore);
         cmdStore.setBounds(71, 0, 20, 20);
 
-        txtStore.setBackground(new java.awt.Color(255, 255, 241));
         txtStore.setEditable(false);
+        txtStore.setBackground(new java.awt.Color(255, 255, 241));
         txtStore.setForeground(new java.awt.Color(153, 0, 0));
         txtStore.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane9.add(txtStore);
-        txtStore.setBounds(95, 0, 190, 18);
+        txtStore.setBounds(95, 0, 210, 18);
 
         jLabel21.setText("Store Code");
 
@@ -2025,9 +2029,9 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jLayeredPane10.add(txtPay);
         txtPay.setBounds(110, 20, 100, 20);
 
+        txtNetAmount.setEditable(false);
         txtNetAmount.setBackground(new java.awt.Color(249, 249, 229));
         txtNetAmount.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        txtNetAmount.setEditable(false);
         txtNetAmount.setForeground(new java.awt.Color(153, 0, 0));
         txtNetAmount.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtNetAmount.setText("0.00");
@@ -2056,12 +2060,12 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jLayeredPane6.add(cmdArea);
         cmdArea.setBounds(71, 0, 20, 20);
 
-        txtArea.setBackground(new java.awt.Color(255, 255, 241));
         txtArea.setEditable(false);
+        txtArea.setBackground(new java.awt.Color(255, 255, 241));
         txtArea.setForeground(new java.awt.Color(153, 0, 0));
         txtArea.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         jLayeredPane6.add(txtArea);
-        txtArea.setBounds(95, 0, 190, 18);
+        txtArea.setBounds(95, 0, 210, 18);
 
         jLabel13.setText("Remarks");
 
@@ -2079,14 +2083,13 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(0, 0, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel1)
                                             .addComponent(lblCust, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -2102,50 +2105,41 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLayeredPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE)))
-                                .addGap(13, 13, 13))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
+                                        .addComponent(jLayeredPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButton2)
-                                .addGap(18, 18, 18)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtCurrencyCode, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(26, 26, 26)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtFCRate))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLayeredPane6)
+                                            .addComponent(jLayeredPane9)
+                                            .addComponent(jLayeredPane7)))))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLayeredPane1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtCurrencyCode, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLayeredPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtFCRate, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLayeredPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLayeredPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLayeredPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                                    .addComponent(jLayeredPane7))))
-                        .addGap(347, 347, 347))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLayeredPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLayeredPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLayeredPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtRemark, javax.swing.GroupLayout.PREFERRED_SIZE, 689, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtRemark))))
                     .addComponent(jScrollPane1))
-                .addGap(339, 339, 339))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2188,7 +2182,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                     .addComponent(jLayeredPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLayeredPane10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 62, Short.MAX_VALUE)
@@ -2365,7 +2359,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         txtSelectedItemName.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         txtSelectedItemName.setOpaque(true);
         jLayeredPane11.add(txtSelectedItemName);
-        txtSelectedItemName.setBounds(450, 0, 330, 20);
+        txtSelectedItemName.setBounds(450, 0, 430, 20);
 
         jLabel5.setText("Invo. Type");
 
@@ -2394,6 +2388,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLayeredPane11)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
@@ -2403,17 +2398,15 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtCrPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(18, 126, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtLoanNo)
+                .addComponent(txtLoanNo, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addComponent(jLayeredPane11)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 786, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 884, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2431,38 +2424,13 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                         .addComponent(jLabel7))
                     .addComponent(txtCrPayDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLayeredPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
-        if (evt.getKeyCode() == 127 && jTable1.getSelectedRow() >= 0) {
-            doDeleteRow();
-        } else if (evt.getKeyCode() == KeyEvent.VK_F3) {
-            addNewRow();
-        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-            loadTable();
-        } else {
-            if (jTable1.getSelectedColumn() == 1) {
-                loadItem();
-            }
-        }
-    }//GEN-LAST:event_jTable1KeyReleased
-
-    private void txtPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPayActionPerformed
-        if (txtPay.getText() == null) {
-            txtPay.setText("0.00");
-        }
-        calcDue();
-    }//GEN-LAST:event_txtPayActionPerformed
-
-    private void txtCurrencyCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCurrencyCodeActionPerformed
-        loadFCRate();
-    }//GEN-LAST:event_txtCurrencyCodeActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         String invo = JOptionPane.showInputDialog(null, "Please Insert the suspend invoice no.");
@@ -2487,27 +2455,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_txtInvoTypeActionPerformed
 
-    private void txtCusCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCusCodeActionPerformed
-        loadCus();
-    }//GEN-LAST:event_txtCusCodeActionPerformed
-
-    private void txtCusCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtCusCodePropertyChange
-        loadCus();
-    }//GEN-LAST:event_txtCusCodePropertyChange
-
-    private void txtCostCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtCostCodePropertyChange
-
-    }//GEN-LAST:event_txtCostCodePropertyChange
-
-    private void txtrepCodeVetoableChange(java.beans.PropertyChangeEvent evt) throws java.beans.PropertyVetoException {//GEN-FIRST:event_txtrepCodeVetoableChange
-
-    }//GEN-LAST:event_txtrepCodeVetoableChange
-
-    private void txtrepCodeInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtrepCodeInputMethodTextChanged
-
-    }//GEN-LAST:event_txtrepCodeInputMethodTextChanged
-
-    private void jFormattedTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField1ActionPerformed
+    private void txtQuantityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQuantityActionPerformed
         int i = jTable1.getSelectedRow();
         if (i >= 0) {
             DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
@@ -2528,14 +2476,14 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                     doCalAll();
                 } else {
                     JOptionPane.showMessageDialog(null, "Item Qty is Zero", "Qty erorr !", JOptionPane.ERROR_MESSAGE);
-                    jFormattedTextField1.grabFocus();
+                    txtQuantity.grabFocus();
                 }
             }
         }
-    }//GEN-LAST:event_jFormattedTextField1ActionPerformed
+    }//GEN-LAST:event_txtQuantityActionPerformed
 
-    private void jFormattedTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField1KeyReleased
-        if (!jFormattedTextField1.getText().isEmpty()) {
+    private void txtQuantityKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQuantityKeyReleased
+        if (!txtQuantity.getText().isEmpty()) {
             if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                 DefaultTableModel df = (DefaultTableModel) jTable1.getModel();
                 int i = jTable1.getSelectedRow();
@@ -2557,14 +2505,14 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
                         jTable1.editCellAt(i + 1, 1);
                     } else {
                         JOptionPane.showMessageDialog(null, "Item Qty is Zero", "Qty erorr !", JOptionPane.ERROR_MESSAGE);
-                        jFormattedTextField1.grabFocus();
+                        txtQuantity.grabFocus();
                     }
                 }
             }
         } else {
-            jFormattedTextField1.grabFocus();
+            txtQuantity.grabFocus();
         }
-    }//GEN-LAST:event_jFormattedTextField1KeyReleased
+    }//GEN-LAST:event_txtQuantityKeyReleased
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
     }//GEN-LAST:event_jTextField1KeyReleased
@@ -2572,33 +2520,6 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextField1FocusGained
         loadItem();
     }//GEN-LAST:event_jTextField1FocusGained
-
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-//        setItem();
-    }//GEN-LAST:event_jTable1MouseClicked
-
-    private void txtDiscountRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiscountRateActionPerformed
-        calcTotDiscVal();
-    }//GEN-LAST:event_txtDiscountRateActionPerformed
-
-    private void txtDiscountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiscountActionPerformed
-        calcTotDiscRate();
-    }//GEN-LAST:event_txtDiscountActionPerformed
-
-    private void txtPayKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayKeyReleased
-        if (txtPay.getText() == null) {
-            txtPay.setText("0.00");
-        }
-        calcDue();
-    }//GEN-LAST:event_txtPayKeyReleased
-
-    private void txtDiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountKeyReleased
-        calcTotDiscRate();
-    }//GEN-LAST:event_txtDiscountKeyReleased
-
-    private void txtDiscountRateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountRateKeyReleased
-        calcTotDiscVal();
-    }//GEN-LAST:event_txtDiscountRateKeyReleased
 
     private void jTextField1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyPressed
         loadItem();
@@ -2608,7 +2529,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
         DefaultTableModel tableModel = (DefaultTableModel) jTable1.getModel();
         try {
 
-//OBJSalesInvoiceQO o = (OBJSalesInvoiceQO) tableModel.getValueAt(0, 1);
+            //OBJSalesInvoiceQO o = (OBJSalesInvoiceQO) tableModel.getValueAt(0, 1);
             Object o = tableModel.getValueAt(0, 1);
 
             if (o.getClass().equals(OBJSalesInvoiceQO.class)) {
@@ -2620,6 +2541,79 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
             e.printStackTrace();
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void txtPayKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayKeyReleased
+        if (txtPay.getText() == null) {
+            txtPay.setText("0.00");
+        }
+        calcDue();
+    }//GEN-LAST:event_txtPayKeyReleased
+
+    private void txtPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPayActionPerformed
+        if (txtPay.getText() == null) {
+            txtPay.setText("0.00");
+        }
+        calcDue();
+    }//GEN-LAST:event_txtPayActionPerformed
+
+    private void txtrepCodeVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_txtrepCodeVetoableChange
+
+    }//GEN-LAST:event_txtrepCodeVetoableChange
+
+    private void txtrepCodeInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtrepCodeInputMethodTextChanged
+
+    }//GEN-LAST:event_txtrepCodeInputMethodTextChanged
+
+    private void jTable1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTable1KeyReleased
+
+        if (evt.getKeyCode() == 127 && jTable1.getSelectedRow() >= 0) {
+            doDeleteRow();
+        } else if (evt.getKeyCode() == KeyEvent.VK_F3) {
+            addNewRow();
+        } else if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            loadTable();
+        } else {
+            if (jTable1.getSelectedColumn() == 1) {
+                loadItem();
+            }
+        }
+    }//GEN-LAST:event_jTable1KeyReleased
+
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+        //        setItem();
+    }//GEN-LAST:event_jTable1MouseClicked
+
+    private void txtDiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountKeyReleased
+        calcTotDiscRate();
+    }//GEN-LAST:event_txtDiscountKeyReleased
+
+    private void txtDiscountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiscountActionPerformed
+        calcTotDiscRate();
+    }//GEN-LAST:event_txtDiscountActionPerformed
+
+    private void txtDiscountRateKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountRateKeyReleased
+        calcTotDiscVal();
+    }//GEN-LAST:event_txtDiscountRateKeyReleased
+
+    private void txtDiscountRateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiscountRateActionPerformed
+        calcTotDiscVal();
+    }//GEN-LAST:event_txtDiscountRateActionPerformed
+
+    private void txtCostCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtCostCodePropertyChange
+
+    }//GEN-LAST:event_txtCostCodePropertyChange
+
+    private void txtCusCodePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txtCusCodePropertyChange
+        loadCus();
+    }//GEN-LAST:event_txtCusCodePropertyChange
+
+    private void txtCusCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCusCodeActionPerformed
+        loadCus();
+    }//GEN-LAST:event_txtCusCodeActionPerformed
+
+    private void txtCurrencyCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCurrencyCodeActionPerformed
+        loadFCRate();
+    }//GEN-LAST:event_txtCurrencyCodeActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {
         chBoxAct();
@@ -2739,7 +2733,6 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
@@ -2807,6 +2800,7 @@ public class GUISalesInvoiceQO extends javax.swing.JInternalFrame {
     private javax.swing.JFormattedTextField txtPay;
     private javax.swing.JTextField txtPayTermCode;
     private javax.swing.JTextField txtPrepBy;
+    private javax.swing.JFormattedTextField txtQuantity;
     private javax.swing.JTextField txtRef;
     private javax.swing.JTextField txtRemark;
     private javax.swing.JLabel txtSelectedItem;
